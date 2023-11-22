@@ -1,0 +1,19 @@
+#setNumbArray {justify-content: space-between;}
+
+#arrSize {display: flex;}
+
+#arrNumbs {
+    display: grid;
+    grid-template-columns: repeat(4, 50px);
+    column-gap: 8px;
+    row-gap: 14px;
+}
+.number {
+    width: calc(100% / 20);
+    height: 55%;
+    font-size: clamp(.5em, 2vw, 1em);
+    text-align: center;
+    background-color: blueviolet;
+    color: white;
+}
+.number:not(:first-child) {margin-left: min(8px, 1%);}

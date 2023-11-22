@@ -1,0 +1,34 @@
+
+#displaySortArea {
+    width: min(100%, 700px);
+    display: flex;
+    flex-direction: column;
+}
+#showArea {
+    border: 1px solid lightgray;
+    background: lightcyan;
+    height: 250px;
+    padding: 8px;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    align-items: flex-end;
+}
+
+
+/* Controls */
+#controls, #onRun {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+}
+button {
+    height: 2.7em;
+    padding: 0 20px;
+    width: 100%;
+}
+#onRun button {width: 50%;}
+#onRun button:first-child {margin-right: 2px;}
+#onRun button:last-child {margin-left: 2px;}
+.hide {display: none !important;}
