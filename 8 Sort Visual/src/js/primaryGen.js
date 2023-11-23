@@ -1,7 +1,5 @@
-
-
-
 // сгенерировать значения для списка arrSize
+createArraySizeOptions()
 export function createArraySizeOptions() {
     const MIN_ARRAY_SIZE = 3
     const MAX_ARRAY_SIZE = 20
@@ -20,13 +18,14 @@ export function createArraySizeOptions() {
     select.appendChild(fragment)
 
     changeArraySize(DEFAULT_SIZE) //создать дефолтное кол-во ячеек
-    select.addEventListener('change', (e)=>changeArraySize(e.target.value))
+    select.addEventListener('change', (e)=>{changeArraySize(e.target.value); isReady()})
 }
 
 // вывести диапазон значений для ячеек arrNumbs
+showValueRange()
 export function showValueRange() {
     const range = document.createElement('span')
-    range.append(`от 0 до ${getMaxValue()}`)
+    range.append(`от 1 до ${getMaxValue()}`)
     range.style.fontSize = '12px'
     range.style.color = 'red'
     document.querySelector('#manually h4').append(' (',range,')')
@@ -47,11 +46,11 @@ function changeArraySize(length) {
         // исключить возм-ть записи числа больше 3-значного и MAX (250px - 2em)
         inputNum.addEventListener("keydown",(e)=>{
             const value = e.target.value
-            if(value.length > 1) {
-                setTimeout(()=>{
-                    if(Number(e.target.value) > getMaxValue()) e.target.value=value;}
-                ,50)
-            }
+            setTimeout(()=>{
+                if(e.target.value!='' && (Number(e.target.value) > getMaxValue() 
+                || Number(e.target.value) < 1)) 
+                    e.target.value=value;}
+            ,50)
         })
         // отобразить значение на диаграмме showArea
         inputNum.addEventListener("keyup",(e)=>{ //ввод
@@ -84,9 +83,32 @@ export function getMaxValue() {
     return areaHeight - lowHeight
 }
 export function changeValue(index, value) {
-    //установить value
+    // установить value
     const col = document.getElementsByClassName('number')[index]
     col.textContent = value
-    //height
     col.style.height = `max(calc(${value}px  + 2em),2em)` // MIN = 2em (для вместимости цифры)
+    
+    // все ли поля заданы?
+    isReady()
+}
+
+export function isReady() {
+    document.getElementById('startBtn').disabled=!isInputsFilled()
+}
+function isInputsFilled() {
+    return isAllValuesFilled('.value') && isSortTypeSelected()
+}
+function isAllValuesFilled(selector) {
+    let isAllFilled = true
+    Array.from(document.querySelectorAll(selector)).forEach(input=>{
+        if(input.value == '') isAllFilled = false
+    })
+    return isAllFilled
+}
+function isSortTypeSelected() {
+    let isSelected = false
+    Array.from(document.querySelectorAll('#setAlgorithm [type="radio"]')).forEach(elem=>{
+        if(elem.checked == true) isSelected = true
+    })
+    return isSelected
 }
