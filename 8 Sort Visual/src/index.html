@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Show Sort</title>
     <link rel="stylesheet" href="./assets/styles/main.css">
-    <script src="./js/main.js" defer></script>
+    <script type="module" src="./js/main.js" defer></script>
 </head>
 <body>
     <main>
@@ -31,29 +31,9 @@
         </section>
         <section id="displaySortArea">
             <section id="showArea">
-                <div class="number">1</div>
-                <div class="number">2</div>
-                <div class="number">3</div>
-                <div class="number">4</div>
-                <div class="number">5</div>
-                <div class="number">1</div>
-                <div class="number">2</div>
-                <div class="number">3</div>
-                <div class="number">4</div>
-                <div class="number">5</div>
-                <div class="number">1</div>
-                <div class="number">2</div>
-                <div class="number">3</div>
-                <div class="number">4</div>
-                <div class="number">5</div>
-                <div class="number">1</div>
-                <div class="number">2</div>
-                <div class="number">3</div>
-                <div class="number">4</div>
-                <div class="number">5</div>
             </section>
             <section id="controls">
-                <button id="startBtn">Start</button>
+                <button id="startBtn" disabled>Start</button>
                 <section id="onRun" class="hide">
                     <button id="pauseBtn">Pause</button>
                     <button id="continueBtn">Continue</button>
@@ -65,7 +45,8 @@
             
             <section class="params">
                 <section>
-                    <label>Количество чисел
+                    <label>
+                        Количество чисел
                         <select name="arrSize" id="arrSize"></select>
                     </label>
                 </section>          
@@ -74,7 +55,7 @@
                     <section id="arrNumbs"></section>
                 </section>
                 <section>
-                    <button id="auto">Автоподбор</button>
+                    <button id="setAuto">Автоподбор</button>
                 </section>  
             </section>
         </section>

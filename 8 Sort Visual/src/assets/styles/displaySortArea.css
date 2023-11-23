@@ -7,13 +7,25 @@
 #showArea {
     border: 1px solid lightgray;
     background: lightcyan;
+    box-sizing: content-box;
     height: 250px;
     padding: 8px;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     flex-direction: row;
     align-items: flex-end;
 }
+
+/* заготовка под поле */
+.number {
+    height: 100%;
+    padding-top: 8px;
+    font-size: clamp(.5em, 2vw, 1em);
+    text-align: center;
+    background-color: rgb(138 43 226 / 80%);
+    color: white;
+}
+.number:not(:first-child) {margin-left: min(8px, 1%);}
 
 
 /* Controls */
