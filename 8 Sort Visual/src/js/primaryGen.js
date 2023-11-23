@@ -3,7 +3,7 @@ createArraySizeOptions()
 export function createArraySizeOptions() {
     const MIN_ARRAY_SIZE = 3
     const MAX_ARRAY_SIZE = 20
-    const DEFAULT_SIZE = 20
+    const DEFAULT_SIZE = 14
 
     const fragment = document.createDocumentFragment() //для пакетной обработки изменений перед добавлением в DOM
     for (let len = MIN_ARRAY_SIZE; len <= MAX_ARRAY_SIZE; len++) {
