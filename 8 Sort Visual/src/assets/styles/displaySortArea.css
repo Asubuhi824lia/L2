@@ -30,6 +30,9 @@
 .number-selected {
     background-color: rgb(43, 43, 43) !important;
 }
+.number-definable {
+    background: #696969 !important;
+}
 .number-placed {
     background-color: #420679cc !important;
 }

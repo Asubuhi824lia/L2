@@ -1,3 +1,12 @@
+export function selectNumb(index, timeout) {
+    return new Promise(resolve => {
+        setTimeout(()=>{
+            resolve(
+                document.querySelectorAll('.number')[index].classList.add('number-selected')
+            )
+        },timeout)
+    })
+}
 export function selectNumbs(cur, next, timeout) {
     return new Promise(resolve => {
         setTimeout(()=>{
@@ -8,6 +17,7 @@ export function selectNumbs(cur, next, timeout) {
         },timeout)
     })
 }
+
 export function leaveNumbs(cur, next, timeout) {
     return new Promise(resolve => {
         setTimeout(()=>{
@@ -18,8 +28,18 @@ export function leaveNumbs(cur, next, timeout) {
         }, timeout)
     })
 }
+export function leaveNumb(index, timeout) {
+    return new Promise(resolve => {
+        setTimeout(()=>{
+            resolve(
+                document.querySelectorAll('.number')[index].classList.remove('number-selected'),
+                document.querySelectorAll('.number')[index].classList.remove('number-definable')
+            )
+        }, timeout)
+    })
+}
 
-export function animateExchange(cur, next, timeout) {
+export function animateSwap(cur, next, timeout) {
     return new Promise(resolve => {
         setTimeout(()=>{
             resolve(
@@ -35,8 +55,16 @@ export function animateExchange(cur, next, timeout) {
 export function showFixedNumb(ind, timeout) {
     return new Promise(resolve => {
         setTimeout(()=>{
-            leaveNumbs(ind-1, ind)
+            if(ind >= 0) leaveNumbs(ind-1, ind)
             resolve(document.querySelectorAll('.number')[ind].classList.add('number-placed'))
+        },timeout)
+    })
+}
+export function showDefNumb(ind, timeout) {
+    return new Promise(resolve => {
+        setTimeout(()=>{
+            if(ind >= 0) leaveNumbs(ind-1, ind)
+            resolve(document.querySelectorAll('.number')[ind].classList.add('number-definable'))
         },timeout)
     })
 }
