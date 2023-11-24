@@ -40,8 +40,7 @@ document.getElementById('startBtn').addEventListener('click',()=>{
         // CombSort(array)
         console.log('combSort')
     } else if(document.getElementById('insertSort').checked) {
-        // InsertSort(array)
-        console.log('insertSort')
+        InsertSort(array)
     } else if(document.getElementById('selectSort').checked) {
         SelectSort(array)
     }
@@ -50,6 +49,7 @@ document.getElementById('startBtn').addEventListener('click',()=>{
   
 async function BubbleSort(values) {
     let startT = 500
+
     for (let i = 0; i + 1 < values.length; ++i) {
         for (let j = 0; j + 1 < values.length - i; ++j) {
             await selectNumbs(j, j+1, startT)
@@ -99,8 +99,35 @@ async function ShakerSort(values) {
     return values
 }
 
+
+async function InsertSort(values) {
+    let startT = 1000
+
+    for (let i = 1; i < values.length; ++i) {
+        const x = values[i]
+        let j = i
+        await selectNumb(i, startT)
+        while (j > 0 && values[j - 1] > x) {
+            await selectNumb(j - 1, startT)
+            if(j - 1 !== 0 && !(values[j - 2] < x && values[j - 1] >= x) )
+                leaveNumb(j - 1, startT)
+            
+            
+            values[j] = values[j - 1]
+            --j
+        }
+        if(i != j) {
+            values[j] = x
+            await animateSwap(j, i, startT)
+        }
+        leaveNumbs(j, j+1, startT)
+    }
+    console.log(values)
+}
+
 async function SelectSort(values) {
     let startT = 1000
+
     for (let i = 0; i < values.length; ++i) {
         
         // отобразить перебор элементов от i до конца
