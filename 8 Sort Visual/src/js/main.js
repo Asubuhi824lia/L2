@@ -37,8 +37,7 @@ document.getElementById('startBtn').addEventListener('click',()=>{
     } else if(document.getElementById('shakerSort').checked) {
         ShakerSort(array)
     } else if(document.getElementById('combSort').checked) {
-        // CombSort(array)
-        console.log('combSort')
+        CombSort(array)
     } else if(document.getElementById('insertSort').checked) {
         InsertSort(array)
     } else if(document.getElementById('selectSort').checked) {
@@ -99,6 +98,24 @@ async function ShakerSort(values) {
     return values
 }
 
+async function CombSort(values) {
+    let startT = 500
+
+    const factor = 1.247; // Фактор уменьшения
+    let step = values.length - 1;
+    while (step >= 1) {
+        for (let i = 0; i + step < values.length; ++i) {
+            await selectNumbs(i, i + step, startT)
+            if (values[i] > values[i + step]) {
+                await animateSwap(i + step, i, startT);
+                await animateSwap(i, i + step, startT);
+                [values[i], values[i + step]] = [values[i + step], values[i]]
+            }
+            leaveNumbs(i, i + step, startT)// выполнить чуть раньше selectNumbs
+        }
+        step = Math.floor(step / factor);
+    }
+}
 
 async function InsertSort(values) {
     let startT = 1000
@@ -111,8 +128,7 @@ async function InsertSort(values) {
             await selectNumb(j - 1, startT)
             if(j - 1 !== 0 && !(values[j - 2] < x && values[j - 1] >= x) )
                 leaveNumb(j - 1, startT)
-            
-            
+
             values[j] = values[j - 1]
             --j
         }
