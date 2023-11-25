@@ -1,5 +1,5 @@
 export function selectNumb(index, timeout) {
-    return new Promise(resolve => {
+    return () => new Promise(resolve => {
         setTimeout(()=>{
             resolve(
                 document.querySelectorAll('.number')[index].classList.add('number-selected')
@@ -8,7 +8,7 @@ export function selectNumb(index, timeout) {
     })
 }
 export function selectNumbs(cur, next, timeout) {
-    return new Promise(resolve => {
+    return () => new Promise(resolve => {
         setTimeout(()=>{
             resolve(
                 document.querySelectorAll('.number')[cur].classList.add('number-selected'),
@@ -19,7 +19,7 @@ export function selectNumbs(cur, next, timeout) {
 }
 
 export function leaveNumbs(cur, next, timeout) {
-    return new Promise(resolve => {
+    return () => new Promise(resolve => {
         setTimeout(()=>{
             resolve(
                 document.querySelectorAll('.number')[cur].classList.remove('number-selected'),
@@ -29,7 +29,7 @@ export function leaveNumbs(cur, next, timeout) {
     })
 }
 export function leaveNumb(index, timeout) {
-    return new Promise(resolve => {
+    return () => new Promise(resolve => {
         setTimeout(()=>{
             resolve(
                 document.querySelectorAll('.number')[index].classList.remove('number-selected'),
@@ -39,8 +39,8 @@ export function leaveNumb(index, timeout) {
     })
 }
 
-export function animateSwap(cur, next, timeout) {
-    return new Promise(resolve => {
+export function animateSwap(cur, next, timeout, ) {
+    return () => new Promise(resolve => {
         setTimeout(()=>{
             resolve(
                 document.getElementById('showArea').insertBefore(
@@ -53,7 +53,7 @@ export function animateSwap(cur, next, timeout) {
 }
 
 export function showFixedNumb(ind, timeout) {
-    return new Promise(resolve => {
+    return () => new Promise(resolve => {
         setTimeout(()=>{
             if(ind >= 0) leaveNumbs(ind-1, ind)
             resolve(document.querySelectorAll('.number')[ind].classList.add('number-placed'))
@@ -61,7 +61,7 @@ export function showFixedNumb(ind, timeout) {
     })
 }
 export function showDefNumb(ind, timeout) {
-    return new Promise(resolve => {
+    return () => new Promise(resolve => {
         setTimeout(()=>{
             if(ind >= 0) leaveNumbs(ind-1, ind)
             resolve(document.querySelectorAll('.number')[ind].classList.add('number-definable'))

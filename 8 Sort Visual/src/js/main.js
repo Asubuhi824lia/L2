@@ -2,7 +2,8 @@ import {getMaxValue, changeValue, isReady, changeArraySize} from './primaryGen.j
 import {selectNumbs, selectNumb, leaveNumbs, leaveNumb,
         animateSwap, showFixedNumb, showDefNumb} from './sortAnimate.js'
 
-globalThis.isPause = true
+globalThis.isPause = false
+globalThis.pausedAnimations = []
 
 const timeout = 500
 let isRun = false //для radio
@@ -46,7 +47,7 @@ document.getElementById('startBtn').addEventListener('click',(e)=>{
     e.target.classList.add('hide')
     document.getElementById('onRun').classList.remove('hide')
     
-    // заблокировать поля ввода setAlgorithm, value, setAuto, arrSize
+    // заблокировать ввод setAlgorithm, value, setAuto, arrSize
     isRun = true
     setInputsDisabled(isRun)
 
@@ -64,9 +65,11 @@ document.getElementById('continueBtn').addEventListener('click',(e)=>{
     e.target.disabled = true
     isRun = true
     document.getElementById('pauseBtn').disabled = false
+    continueAnimate()
 })
 document.getElementById('resetBtn').addEventListener('click',(e)=>{
     setInputsDisabled(false)
+    isRun = false
 
     const select = document.getElementById("arrSize")
     changeArraySize(select.value)
@@ -93,25 +96,28 @@ async function sort(array) {
         setTimeout(()=>{},timeout)
     })
 
-    // сброс для начала заново
+    if(!isPause) setResetBtn()
+}
+
+function setResetBtn() {
     document.getElementById('onRun').classList.add('hide')
     document.getElementById('resetBtn').classList.remove('hide')
 }
-  
+
 async function BubbleSort(values) {
     for (let i = 0; i + 1 < values.length; ++i) {
         for (let j = 0; j + 1 < values.length - i; ++j) {
-            await selectNumbs(j, j+1, timeout)
+            await checkIsPause( selectNumbs(j, j+1, timeout) )()
             if (values[j + 1] < values[j]) {
-                await animateSwap(j, j+1, timeout);
+                await checkIsPause( animateSwap(j, j+1, timeout) )();
                 [values[j], values[j + 1]] = [values[j + 1], values[j]]
             }
-            leaveNumbs(j, j+1, timeout)// выполнить чуть раньше selectNumbs
-            if(j+1 === values.length - i - 1) await showFixedNumb(j+1, timeout)
+            checkIsPause( leaveNumbs(j, j+1, timeout), false )()// выполнить чуть раньше selectNumbs
+            if(j+1 === values.length - i - 1) await checkIsPause( showFixedNumb(j+1, timeout) )()
         }
     }
 
-    await showFixedNumb(0, timeout) //окрасить оставшийся элемент
+    await checkIsPause( showFixedNumb(0, timeout) )//окрасить оставшийся элемент
     return values
 }
 
@@ -120,29 +126,29 @@ async function ShakerSort(values) {
     let right = values.length - 1;
     while (left <= right) {    
         for (let i = right; i > left; --i) {
-            await selectNumbs(i-1, i, timeout)
+            await checkIsPause( selectNumbs(i-1, i, timeout) )()
             if (values[i - 1] > values[i]) {
-                await animateSwap(i-1, i, timeout);
+                await checkIsPause( animateSwap(i-1, i, timeout) )();
                 [values[i - 1], values[i]] = [values[i], values[i - 1]]
             }
-            leaveNumbs(i-1, i, timeout)// выполнить чуть раньше selectNumbs
-            if(i === left + 1) await showFixedNumb(i-1, timeout)
+            checkIsPause( leaveNumbs(i-1, i, timeout), false )()// выполнить чуть раньше selectNumbs
+            if(i === left + 1) await checkIsPause( showFixedNumb(i-1, timeout) )()
         }
         ++left;
 
         for (let i = left; i < right; ++i) {
-            await selectNumbs(i, i+1, timeout)
+            await checkIsPause( selectNumbs(i, i+1, timeout) )()
             if (values[i] > values[i + 1]) {
-                await animateSwap(i, i+1, timeout);
+                await checkIsPause( animateSwap(i, i+1, timeout) )();
                 [values[i], values[i + 1]] = [values[i + 1], values[i]]
             }
-            leaveNumbs(i, i+1, timeout)// выполнить чуть раньше selectNumbs
-            if(i === right - 1) await showFixedNumb(i+1, timeout)
+            checkIsPause( leaveNumbs(i, i+1, timeout), false )()// выполнить чуть раньше selectNumbs
+            if(i === right - 1) await checkIsPause( showFixedNumb(i+1, timeout) )()
         }
         --right;
     }
 
-    showFixedNumb(Math.floor(values.length/2), timeout) //окрасить оставшийся элемент
+    checkIsPause( showFixedNumb(Math.floor(values.length/2), timeout), false )() //окрасить оставшийся элемент
     return values
 }
 
@@ -151,14 +157,15 @@ async function CombSort(values) {
     let step = values.length - 1;
     while (step >= 1) {
         for (let i = 0; i + step < values.length; ++i) {
-            await selectNumbs(i, i + step, timeout)
+            await checkIsPause( selectNumbs(i, i + step, timeout) )()
+
             if (values[i] > values[i + step]) {
-                await animateSwap(i + step, i, timeout);
-                await animateSwap(i, i + step, timeout);
+                await checkIsPause( animateSwap(i + step, i, timeout) )()
+                await checkIsPause( animateSwap(i, i + step, timeout, true) )()
                 
-                [values[i], values[i + step]] = [values[i + step], values[i]]
+                ;[values[i], values[i + step]] = [values[i + step], values[i]]
             }
-            leaveNumbs(i, i + step, timeout)// выполнить чуть раньше selectNumbs
+            checkIsPause( leaveNumbs(i, i + step, timeout), false )() 
         }
         step = Math.floor(step / factor);
     }
@@ -168,22 +175,21 @@ async function InsertSort(values) {
     for (let i = 1; i < values.length; ++i) {
         const x = values[i]
         let j = i
-        await selectNumb(i, timeout)
+        await checkIsPause( selectNumb(i, timeout) )()
         while (j > 0 && values[j - 1] > x) {
-            await selectNumb(j - 1, timeout)
+            await checkIsPause( selectNumb(j - 1, timeout) )()
             if(j - 1 !== 0 && !(values[j - 2] < x && values[j - 1] >= x) )
-                leaveNumb(j - 1, timeout)
+                checkIsPause( leaveNumb(j - 1, timeout), false )()
 
             values[j] = values[j - 1]
             --j
         }
         if(i != j) {
             values[j] = x
-            await animateSwap(j, i, timeout)
+            await checkIsPause( animateSwap(j, i, timeout) )()
         }
-        leaveNumbs(j, j+1, timeout)
+        checkIsPause( leaveNumbs(j, j+1, timeout), false )()
     }
-    console.log(values)
 }
 
 async function SelectSort(values) {
@@ -191,30 +197,50 @@ async function SelectSort(values) {
         
         // отобразить перебор элементов от i до конца
         let min = i
-        await showDefNumb(min, timeout)
+        await checkIsPause( showDefNumb(min, timeout) )()
         for(let pos = i+1; pos < values.length; ++pos) {
-            await selectNumb(pos, timeout)
+            await checkIsPause( selectNumb(pos, timeout) )()
             
             if(values[min] > values[pos]) {
-                if(min != i)leaveNumb(min, timeout)
+                if(min != i) checkIsPause( leaveNumb(min, timeout), false )()
                 min = pos
-                await selectNumb(min, timeout)
+                await checkIsPause( selectNumb(min, timeout) )()
             } else if(pos == values.length-1 && pos != min) {
-                await leaveNumb(pos, timeout)
+                await checkIsPause( leaveNumb(pos, timeout) )()
             } else {
-                leaveNumb(pos, timeout) //выполнить чуть раньше selectNumbs
+                checkIsPause( leaveNumb(pos, timeout), false )() //выполнить чуть раньше selectNumbs
             }
         }
         
         // поменять местами
-        leaveNumb(i, timeout)
-        showFixedNumb(min, timeout)
+        checkIsPause( leaveNumb(i, timeout), false )()
+        checkIsPause( showFixedNumb(min, timeout), false )()
         if(min > i) {
-            await animateSwap(min, i, timeout)
-            await animateSwap(i, min, timeout)
+            await checkIsPause( animateSwap(min, i, timeout) )()
+            await checkIsPause( animateSwap(i, min, timeout) )()
         }
-        await leaveNumbs(i, min, timeout);
+        await checkIsPause( leaveNumbs(i, min, timeout) )();
         [values[i], values[min]] = [values[min], values[i]]
         
     }
+}
+
+
+// проверка и обработка вызова Паузы
+function checkIsPause(callback, isAwait = true) {
+    if(!isPause) 
+        return callback
+    else 
+        pausedAnimations.push({callback, isAwait})
+        return ()=>{}     
+}
+// обработка продолжения анимации
+async function continueAnimate() {
+    while(!isPause && pausedAnimations.length > 0) {
+        if(pausedAnimations[0].isAwait)
+            await pausedAnimations.shift().callback()
+        else
+            pausedAnimations.shift().callback()
+    }
+    if(pausedAnimations.length == 0) setResetBtn()
 }
