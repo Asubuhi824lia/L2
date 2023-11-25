@@ -32,11 +32,14 @@ export function showValueRange() {
 }
 
 // менять кол-во ячеек arrNumbs и столбцов на showArea при выборе
-function changeArraySize(length) {
-
-    // изменить кол-во ячеек arrNumbs
+export function changeArraySize(length) {
+    changeArrNumbs(length)
+    changeShowArea(length)
+}
+// изменить кол-во ячеек arrNumbs
+function changeArrNumbs(length) {
     const arrNumbs = document.getElementById('arrNumbs')
-    let fragment = document.createDocumentFragment()
+    const fragment = document.createDocumentFragment()
     for (let i = 0; i < length; i++) {
         const inputNum = document.createElement('input')
         inputNum.type = 'number'
@@ -63,10 +66,11 @@ function changeArraySize(length) {
     }
     arrNumbs.innerHTML = ''
     arrNumbs.appendChild(fragment)
-
-    // изменить кол-во столбцов на showArea
+}
+// изменить кол-во столбцов на showArea
+function changeShowArea(length) {
     const showArea = document.getElementById('showArea')
-    fragment = document.createDocumentFragment()
+    const fragment = document.createDocumentFragment()
     for (let i = 0; i < length; i++) {
         const div = document.createElement('div')
         div.classList.add('number')
