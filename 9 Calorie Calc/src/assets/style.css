@@ -68,6 +68,16 @@ main {
 #addProd label:first-child {margin-right: 15px;}
 #addProdBtn {margin-top: 10px; width: 100%; padding: 5px 0;}
 
+.clearAllBtn-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+#clearAllBtn {
+    margin-top: 20px;
+    padding: 10px 20px;
+}
+
 /* List */
 .day h3 {
     margin-top: 30px;

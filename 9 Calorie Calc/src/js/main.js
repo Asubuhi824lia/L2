@@ -1,5 +1,5 @@
 
-globalThis.prodList
+let prodList
 document.addEventListener('DOMContentLoaded',()=>{
     const LSgoal = localStorage.getItem('CalorieCalc_goal')
     document.getElementById('dayGoal').textContent = (!LSgoal||LSgoal=='') ? 'Укажите норму!' : LSgoal
@@ -122,3 +122,14 @@ function createProdList(prodList) {
         else document.querySelector('#productsList .day').before(createDayNode(day))
     });
 }
+
+
+document.getElementById('clearAllBtn').addEventListener('click',()=>{
+    if(confirm("Вы уверены, что хотите удалить ВСЕ записи?")) {
+        prodList = {
+            days: []
+        }
+        console.log(prodList)
+        localStorage.setItem('CalorieCalc_prodList', JSON.stringify(prodList))
+    }
+})
