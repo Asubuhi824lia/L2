@@ -48,6 +48,7 @@ main {
     border: none;
     padding: 0;
     margin-left: 10px;
+    cursor: pointer;
 }
 
 /* Add New Form */
