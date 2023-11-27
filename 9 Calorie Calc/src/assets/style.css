@@ -1,0 +1,89 @@
+
+body {
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+}
+section {width: fit-content;}
+
+header {
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 30px;
+}
+main, header {width: 600px;}
+main {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Sort */
+#sort {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 30px;
+}
+[for="sortType"] {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    margin-right: 15px;
+}
+#sortType {margin-top:5px;}
+
+/* DayGoal */
+.daygoal-card {
+    display: flex;
+    flex-direction: column;
+    border: 3px solid violet;
+    padding: 10px;
+}
+.daygoal-info {
+    display: flex;
+    flex-direction: row;
+}
+#editDayGoal {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: 10px;
+}
+
+/* Add New Form */
+#addProdForm h3 {margin:0 0 10px; width: fit-content;}
+#addProdForm {
+    border: 3px solid purple; 
+    width: fit-content;
+    padding: 20px;
+}
+#addProd {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: fit-content;
+}
+#addProd label {margin: 10px 0}
+#addProd label:first-child {margin-right: 15px;}
+#addProdBtn {margin-top: 10px; width: 100%; padding: 5px 0;}
+
+/* List */
+.day {
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+.product-card {
+    width: 300px;
+    border: 1px solid black;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+}
+.product-card:not(:first-child) {margin-top: 10px;}
+.product-card span {padding: 10px 15px;}
+.product-calorie {
+    width: 30%;
+    border-left: 1px solid black;
+    height: 100%;
+    padding-left: 10px;
+}
