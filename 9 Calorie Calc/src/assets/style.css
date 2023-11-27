@@ -69,9 +69,14 @@ main {
 #addProdBtn {margin-top: 10px; width: 100%; padding: 5px 0;}
 
 /* List */
-.day {
+.day h3 {
     margin-top: 30px;
     margin-bottom: 15px;
+}
+#productsList {
+    margin-top: 30px;
+    /* display: flex;
+    flex-direction: column-reverse; */
 }
 .product-card {
     width: 300px;
@@ -80,7 +85,7 @@ main {
     align-items: stretch;
     justify-content: space-between;
 }
-.product-card:not(:first-child) {margin-top: 10px;}
+.product-card {margin-top: 10px;}
 .product-card span {padding: 10px 15px;}
 .product-calorie {
     width: 30%;
