@@ -16,6 +16,8 @@ main {
     display: flex;
     flex-direction: column;
 }
+button {cursor: pointer;}
+
 
 /* Sort */
 #sort {
@@ -48,7 +50,6 @@ main {
     border: none;
     padding: 0;
     margin-left: 10px;
-    cursor: pointer;
 }
 
 /* Add New Form */
@@ -79,17 +80,14 @@ main {
 }
 
 /* List */
+#productsList, .day, .product-cards, .product-card {width: 100%;}
 .day h3 {
     margin-top: 30px;
     margin-bottom: 15px;
 }
-#productsList {
-    margin-top: 30px;
-    /* display: flex;
-    flex-direction: column-reverse; */
-}
+#productsList {margin-top: 30px;}
+
 .product-card {
-    width: 300px;
     border: 1px solid black;
     display: flex;
     align-items: stretch;
@@ -97,9 +95,19 @@ main {
 }
 .product-card {margin-top: 10px;}
 .product-card span {padding: 10px 15px;}
+.product-card__container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
 .product-calorie {
-    width: 30%;
+    width: 20%;
     border-left: 1px solid black;
-    height: 100%;
     padding-left: 10px;
+}
+.delBtn {
+    border:none;
+    border-left: 1px solid black;
+    width: 3em;
 }
