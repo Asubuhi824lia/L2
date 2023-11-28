@@ -1,6 +1,6 @@
 import {createProdList, insertProd,
-    getCurDate, 
-    setDelBtnHandler} from './manageProdList.js'
+    getStrDate, checkDayLimit,
+    setDelBtnHandler, drawDiagram} from './manageProdList.js'
 
 
 const prodListDef = {
@@ -37,6 +37,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     Array.from(document.getElementsByTagName('form')).forEach(form=>{
         form.addEventListener('click', e=>e.preventDefault())
     })
+
+    drawDiagram()
 })
 
 
@@ -62,8 +64,8 @@ document.getElementById('clearAllBtn').addEventListener('click',()=>{
         prodList = {
             days: []
         }
-        console.log(prodList)
         localStorage.setItem('CalorieCalc_prodList', JSON.stringify(prodList))
+        drawDiagram()
     }
 })
 
@@ -78,7 +80,7 @@ document.getElementById('addProdBtn').addEventListener('click',()=>{
     if(name=='' || calories=='') return;
 
     const product = {name, calories, measure}
-    const curDate = getCurDate()
+    const curDate = getStrDate()
 
     // сверяем текущую дату с последним днём
     if(prodList.days.at(-1).date === curDate) {
@@ -92,27 +94,9 @@ document.getElementById('addProdBtn').addEventListener('click',()=>{
     setDelBtnHandler()
 
     checkDayLimit()
+    drawDiagram()
 })
 
-// Отслеживание превышения дневного лимита калорий
-function checkDayLimit() {
-    if(isDayLimit()) {
-        alert("Дневной лимит калорий превышен!!")
-    }
-}
-function isDayLimit() {
-    const limit = Number(document.getElementById('dayGoal').textContent.split(' ')[0])*1000
-    if(isNaN(limit)) return;
-
-    const sum = prodList.days.at(-1).products
-        .map(product=>{
-            if(product.measure.toLowerCase() === 'ккал.') return Number(product.calories*1000)
-            else return Number(product.calories)
-        })
-        .reduce((count, curVal) => count+curVal)
-
-    return sum > limit
-}
 
 // Сортировка по калорийности
 document.getElementById('sortType').addEventListener('change',(option)=>{

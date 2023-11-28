@@ -1,5 +1,5 @@
 
-export function getCurDate() {return (new Date).toLocaleDateString('ru', {day:'numeric', month:'numeric', year:'numeric'})}
+export function getStrDate(date = new Date) {return (date).toLocaleDateString('ru', {day:'numeric', month:'numeric', year:'numeric'})}
 
 
 /* Создание заметки / списка заметок */
@@ -8,12 +8,12 @@ export function insertProd(product) {
     const lastDate = document.querySelectorAll('.day h3')[0].textContent
 
     // установить соответствие даты
-    if(lastDate === getCurDate()) {
+    if(lastDate === getStrDate()) {
         document.querySelectorAll('.day:first-child .product-card')[0]
             .before(createProdNode(product))
     } else {
         document.querySelectorAll('.day')[0]
-            .before(createDayNode({date:getCurDate(), products:[product]}))
+            .before(createDayNode({date:getStrDate(), products:[product]}))
     }
 }
 
@@ -108,6 +108,7 @@ function delBtnHandler(e, productsList) {
                             curCard.remove()
                         }
                         localStorage.setItem('CalorieCalc_prodList', JSON.stringify(productsList))
+                        drawDiagram()
                         return;
                     }
                 })
@@ -126,4 +127,69 @@ function sliceArray(array, id_del) {
     else
         array = [...array.slice(0,id_del), ...array.slice(id_del+1)]
     return array
+}
+
+
+/* Рисование диаграммы потреблённых калорий */
+
+export function drawDiagram() {
+    document.getElementById('graphic')
+
+    // Выделить 7 дней
+    let week = prodList.days.slice(-7)
+    const MAX = Math.max(...week.map(day=>sumCalories(day.products)))
+    if(week.length < 7) {
+        for(let i=0; i < 7-prodList.days.length; i++) {
+            let date = getPrevDate(week[0].date)
+            week.unshift({date, products:null})
+        }
+    }
+
+    // Вывести диаграмму потребления (верх - по MAX, числа - под, калории - в "столбце")
+    document.getElementById('graphic').innerHTML=''
+    week.forEach((day=>{
+        const div = document.createElement('div')
+        div.classList.add('col')
+
+        const col = document.createElement('section')
+        col.classList.add('col__sum')
+        const sum = day.products ? sumCalories(day.products) : 0
+        col.innerText = `${sum}\nкал`
+        col.style.height = `${( sum / MAX ) * 100}%`
+
+        const date = document.createElement('span')
+        date.classList.add('col__date')
+        date.textContent = day.date
+
+        div.append(col, date)
+        document.getElementById('graphic').appendChild(div)
+    }))
+
+}
+function getPrevDate(date) {
+    const [day, month, year] = date.split('.').map(d=>Number(d))
+    let prevDate = new Date([day-1, month, year].reverse())
+    return getStrDate(prevDate)
+}
+
+
+/* Отслеживание превышения дневного лимита калорий */
+export function checkDayLimit() {
+    if(isDayLimit()) {
+        alert("Дневной лимит калорий превышен!!")
+    }
+}
+function isDayLimit() {
+    const limit = Number(document.getElementById('dayGoal').textContent.split(' ')[0])*1000
+    if(isNaN(limit)) return;
+
+    const sum = sumCalories(prodList.days.at(-1).products)
+    return sum > limit
+}
+function sumCalories(products) {
+    return products.map(product=>{
+            if(product.measure.toLowerCase() === 'ккал.') return Number(product.calories*1000)
+            else return Number(product.calories)
+        })
+        .reduce((count, curVal) => count+curVal)
 }
