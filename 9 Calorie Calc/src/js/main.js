@@ -24,14 +24,19 @@ document.addEventListener('DOMContentLoaded',()=>{
     try{
         globalThis.prodList = JSON.parse(localStorage.getItem('CalorieCalc_prodList'))
     } catch {
-        globalThis.prodList = JSON.parse(JSON.stringify(prodListDef))
+        globalThis.prodList = dubObject(prodListDef)
     }
 
-    if(!prodList) { prodList = JSON.parse(JSON.stringify(prodListDef)) }
+    if(!prodList) { prodList = dubObject(prodListDef) }
     createProdList(prodList)
 
     // выборочное удаление записей
     setDelBtnHandler(prodList)
+
+    // Убрать с форм срабатывание по клику submit
+    Array.from(document.getElementsByTagName('form')).forEach(form=>{
+        form.addEventListener('click', e=>e.preventDefault())
+    })
 })
 
 
@@ -118,7 +123,7 @@ document.getElementById('sortType').addEventListener('change',(option)=>{
         createProdList(prodList)
     }
     else if (type.toLowerCase() === "increase") {
-        const curProrList = JSON.parse(JSON.stringify(prodList))
+        const curProrList = dubObject(prodList)
         let sortedProdList={}
         sortedProdList.days = curProrList.days.map(day=>{
             day.products = day.products.sort((a,b)=>{
@@ -132,7 +137,7 @@ document.getElementById('sortType').addEventListener('change',(option)=>{
         createProdList(sortedProdList)
     }
     else if (type.toLowerCase() === "decrease") {
-        const curProrList = JSON.parse(JSON.stringify(prodList))
+        const curProrList = dubObject(prodList)
         let sortedProdList={}
         sortedProdList.days = curProrList.days.map(day=>{
             day.products = day.products.sort((a,b)=>{
@@ -146,3 +151,24 @@ document.getElementById('sortType').addEventListener('change',(option)=>{
         createProdList(sortedProdList)
     }
 })
+
+// Фильтрация по названию
+document.getElementById('getProdNameBtn').addEventListener('click',()=>{
+    const name = document.getElementById('getProdName').value
+
+    const filteredProdList={}
+    filteredProdList.days = filterDays(dubObject(prodList.days), name)
+    createProdList(filteredProdList)
+})
+
+function filterProds(products, name) { return products.filter(product => product.name.toLowerCase().includes(name.toLowerCase())) }
+function filterDays(days, name) {
+    return days
+        .map(day => {
+            day.products = filterProds(day.products, name)
+            return day
+        })
+        .filter(day => day.products.length > 0)
+}
+
+function dubObject(object) {return JSON.parse(JSON.stringify(object))}
