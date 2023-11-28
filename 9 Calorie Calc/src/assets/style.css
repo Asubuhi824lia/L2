@@ -1,3 +1,8 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
 
 body {
     display: flex; 
@@ -11,12 +16,18 @@ header {
     justify-content: space-between; 
     margin-bottom: 30px;
 }
-main, header {width: 600px;}
+.wrapper {
+    width: 650px;
+}
+main, header, .day-list {width: 100%;}
 main {
     display: flex;
     flex-direction: column;
 }
-button {cursor: pointer;}
+button {
+    cursor: pointer;
+    padding: 0 10px;
+}
 
 
 /* Sort */
@@ -56,14 +67,13 @@ button {cursor: pointer;}
 #addProdForm h3 {margin:0 0 10px; width: fit-content;}
 #addProdForm {
     border: 3px solid purple; 
-    width: fit-content;
+    width: 100%;
     padding: 20px;
 }
 #addProd {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
-    width: fit-content;
+    justify-content: space-between;
 }
 #addProd label {margin: 10px 0}
 #addProd label:first-child {margin-right: 15px;}
@@ -80,11 +90,14 @@ button {cursor: pointer;}
 }
 
 /* List */
-#productsList, .day, .product-cards, .product-card {width: 100%;}
-.day h3 {
-    margin-top: 30px;
-    margin-bottom: 15px;
+.day-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+#productsList, .day, .product-cards, .product-card {width: 100%;}
+.day h3 {margin-bottom: 15px;}
+.day:not(:first-child) h3 {margin-top: 30px;}
 #productsList {margin-top: 30px;}
 
 .product-card {

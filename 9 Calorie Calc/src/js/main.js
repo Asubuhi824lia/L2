@@ -5,7 +5,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('dayGoal').textContent = (!LSgoal||LSgoal=='') ? 'Укажите норму!' : LSgoal
 
     // получить список из localStorage
-    prodList = JSON.parse(localStorage.getItem('CalorieCalc_prodList'))
+    try{
+        prodList = JSON.parse(localStorage.getItem('CalorieCalc_prodList'))
+    } catch {
+        prodList = JSON.parse(JSON.stringify(prodListDef))
+    }
+
     if(!prodList) {
         prodList = JSON.parse(JSON.stringify(prodListDef))
     }
@@ -162,30 +167,32 @@ function setDelBtnHabdler() {
 }
 
 function delBtnHandler(e) {
-    if(confirm("Удалить эту запись?")) {
-
+    if(confirm("Удалить эту запись?")) 
+    {
         // определяем порядок продукта в списке
         const products = Array.from(e.target.parentElement.parentElement.children)
         const curCard = e.target.parentElement
         products.reverse().forEach((card,id_product)=>{
-            if(curCard == card) {
-
+            if(curCard == card) 
+            {
                 // определяем порядок дня в списке
                 const days = Array.from(e.target.parentElement.parentElement.parentElement.parentElement.children)
                 const curDay = curCard.parentElement.parentElement
                 days.reverse().forEach((day, id_day)=>{
-
-                    // убираем заметку из localStorage
-                    if(day == curDay) {
+                    if(day == curDay) 
+                    {
+                        // убираем заметку из localStorage
                         let prods = prodList.days[id_day].products
-                        if(id_product == 0) 
-                            prods = prods.slice(id_product+1)
-                        else if(id_product == prods.length)
-                            prods = prods.slice(0, id_product)
-                        else
-                            prods = [...prods.slice(0,id_product), ...prods.slice(id_product+1)]
+                        prodList.days[id_day].products = sliceArray(prods, id_product)
 
-                        prodList.days[id_day].products = prods
+                        // убираем день?
+                        if(prodList.days[id_day].products.length == 0) {
+                            prodList.days = sliceArray(prodList.days, id_day)
+                            curDay.remove()
+                        } else {
+                            // удаляем заметку с зоны видимости
+                            curCard.remove()
+                        }
                         localStorage.setItem('CalorieCalc_prodList', JSON.stringify(prodList))
                         return;
                     }
@@ -194,7 +201,16 @@ function delBtnHandler(e) {
             }
         })
 
-        // удаляем с зоны видимости
-        e.target.parentElement.remove()
+        
     }
+}
+
+function sliceArray(array, id_del) {
+    if(id_del == 0) 
+        array = array.slice(id_del+1)
+    else if(id_del == array.length)
+        array = array.slice(0, id_del)
+    else
+        array = [...array.slice(0,id_del), ...array.slice(id_del+1)]
+    return array
 }
