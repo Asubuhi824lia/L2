@@ -27,13 +27,11 @@ document.addEventListener('DOMContentLoaded',()=>{
         globalThis.prodList = JSON.parse(JSON.stringify(prodListDef))
     }
 
-    if(!prodList) {
-        prodList = JSON.parse(JSON.stringify(prodListDef))
-    }
+    if(!prodList) { prodList = JSON.parse(JSON.stringify(prodListDef)) }
     createProdList(prodList)
 
     // выборочное удаление записей
-    setDelBtnHandler()
+    setDelBtnHandler(prodList)
 })
 
 
@@ -110,3 +108,41 @@ function isDayLimit() {
 
     return sum > limit
 }
+
+// Сортировка по калорийности
+document.getElementById('sortType').addEventListener('change',(option)=>{
+    const type = option.target.value
+    console.log(option.target.value)
+
+    if (type.toLowerCase() === "addition") {
+        createProdList(prodList)
+    }
+    else if (type.toLowerCase() === "increase") {
+        const curProrList = JSON.parse(JSON.stringify(prodList))
+        let sortedProdList={}
+        sortedProdList.days = curProrList.days.map(day=>{
+            day.products = day.products.sort((a,b)=>{
+                const calorA = (a.measure.toLowerCase() === 'ккал.') ? 1000*Number(a.calories) : Number(a.calories)
+                const calorB = (b.measure.toLowerCase() === 'ккал.') ? 1000*Number(b.calories) : Number(b.calories)
+                if(calorA < calorB) return -1
+                else return 1
+            })
+            return day
+        })
+        createProdList(sortedProdList)
+    }
+    else if (type.toLowerCase() === "decrease") {
+        const curProrList = JSON.parse(JSON.stringify(prodList))
+        let sortedProdList={}
+        sortedProdList.days = curProrList.days.map(day=>{
+            day.products = day.products.sort((a,b)=>{
+                const calorA = (a.measure.toLowerCase() === 'ккал.') ? 1000*Number(a.calories) : Number(a.calories)
+                const calorB = (b.measure.toLowerCase() === 'ккал.') ? 1000*Number(b.calories) : Number(b.calories)
+                if(calorA < calorB) return 1
+                else return -1
+            })
+            return day
+        })
+        createProdList(sortedProdList)
+    }
+})

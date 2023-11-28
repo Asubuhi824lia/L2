@@ -60,10 +60,10 @@ function createDayNode({date, products}) {
     return day
 }
 
-export function createProdList(prodList) {
+export function createProdList(productsList) {
     document.getElementById('productsList').innerHTML=''
     
-    prodList.days.forEach((day, index) => {
+    productsList.days.forEach((day, index) => {
         if(index == 0) document.getElementById('productsList').appendChild(createDayNode(day))
         else document.querySelector('#productsList .day').before(createDayNode(day))
     });
@@ -72,15 +72,15 @@ export function createProdList(prodList) {
 
 /* Удаление заметки */
 
-export function setDelBtnHandler() {
+export function setDelBtnHandler(productsList) {
     // выборочное удаление записей
     Array.from(document.getElementsByClassName('delBtn')).forEach(delBtn=>{
         delBtn.getElementsByTagName('svg')[0].style.pointerEvents = "none"
 
-        delBtn.addEventListener('click', delBtnHandler)
+        delBtn.addEventListener('click', (e) => delBtnHandler(e, productsList))
     })
 }
-function delBtnHandler(e) {
+function delBtnHandler(e, productsList) {
     if(confirm("Удалить эту запись?")) 
     {
         // определяем порядок продукта в списке
@@ -96,18 +96,18 @@ function delBtnHandler(e) {
                     if(day == curDay) 
                     {
                         // убираем заметку из localStorage
-                        let prods = prodList.days[id_day].products
-                        prodList.days[id_day].products = sliceArray(prods, id_product)
+                        let prods = productsList.days[id_day].products
+                        productsList.days[id_day].products = sliceArray(prods, id_product)
 
                         // убираем день?
-                        if(prodList.days[id_day].products.length == 0) {
-                            prodList.days = sliceArray(prodList.days, id_day)
+                        if(productsList.days[id_day].products.length == 0) {
+                            productsList.days = sliceArray(productsList.days, id_day)
                             curDay.remove()
                         } else {
                             // удаляем заметку с зоны видимости
                             curCard.remove()
                         }
-                        localStorage.setItem('CalorieCalc_prodList', JSON.stringify(prodList))
+                        localStorage.setItem('CalorieCalc_prodList', JSON.stringify(productsList))
                         return;
                     }
                 })
