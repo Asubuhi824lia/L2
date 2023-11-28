@@ -87,4 +87,26 @@ document.getElementById('addProdBtn').addEventListener('click',()=>{
     localStorage.setItem('CalorieCalc_prodList', JSON.stringify(prodList))
     insertProd(product)
     setDelBtnHandler()
+
+    checkDayLimit()
 })
+
+// Отслеживание превышения дневного лимита калорий
+function checkDayLimit() {
+    if(isDayLimit()) {
+        alert("Дневной лимит калорий превышен!!")
+    }
+}
+function isDayLimit() {
+    const limit = Number(document.getElementById('dayGoal').textContent.split(' ')[0])*1000
+    if(isNaN(limit)) return;
+
+    const sum = prodList.days.at(-1).products
+        .map(product=>{
+            if(product.measure.toLowerCase() === 'ккал.') return Number(product.calories*1000)
+            else return Number(product.calories)
+        })
+        .reduce((count, curVal) => count+curVal)
+
+    return sum > limit
+}
