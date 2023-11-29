@@ -2,17 +2,25 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    opacity: 100%;
 }
 body {
     display: flex;
     justify-content: center;
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+}
+header {
+    margin: 30px 0;
+    text-align: center;
 }
 main {
     display: grid;
     grid-template-columns: 110px 250px 100px;
     column-gap: 20px;
     width: fit-content;
-    margin-top: 30px;
 }
 main>section {
     display: flex;
@@ -47,6 +55,7 @@ main>section {
 
 
 #answer {
+    text-align: center;
     height: 130px;
     display: flex;
     align-items: center;
@@ -64,5 +73,5 @@ main>section {
 #range label:last-child {margin-top:10px;}
 #range label {
     display: grid;
-    grid-template-columns: 1.5em calc(100% - 1.5em);
+    grid-template-columns: 2em calc(100% - 2em);
 }
