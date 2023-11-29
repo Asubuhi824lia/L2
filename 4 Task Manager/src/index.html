@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Планировщик задач</title>
+    <link rel="stylesheet" href="./assets/style.css">
+    <script type="module" src="./js/main.js"defer></script>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <form id="sort">
+                <label for="sortType">
+                    Срок выполнения
+                    <select id="sortType">
+                        <option value="addition" selected>По добавлению</option>
+                        <option value="increase">По возрастанию</option>
+                        <option value="decrease">По убыванию</option>
+                    </select>
+                </label>
+            </form>
+        </header>
+        <main>
+            <section class="day-list">
+                <section id="addTaskForm">
+                    <h3>Добавить новую задачу</h3>
+                    <form id="addTask">
+                        <label>Название
+                            <input type="text" id="getTask" required>
+                        </label>
+                        <label>Описание
+                            <input type="text" id="getDescription">
+                        </label>
+                        <label>Срок выполнения
+                            <input type="datetime-local" id="deadline" required>
+                        </label>
+                    </form>
+                    <button id="addTaskBtn">Добавить</button>
+                </section>
+                <section class="clearAllBtn-container">
+                    <button id="clearAllBtn">Очистить всё</button>
+                </section>
+                <section id="tasksList"></section>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

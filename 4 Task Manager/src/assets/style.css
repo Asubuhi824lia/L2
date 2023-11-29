@@ -1,0 +1,116 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+}
+section {width: fit-content;}
+
+header {
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 30px;
+}
+.wrapper {
+    width: 650px;
+}
+main, header, .day-list {width: 100%;}
+main {
+    display: flex;
+    flex-direction: column;
+}
+button {
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+
+/* Sort */
+#sort {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 30px;
+}
+[for="sortType"] {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    margin-right: 15px;
+}
+#sortType {margin-top:5px;}
+
+
+/* Add New Form */
+#addTaskForm h3 {margin:0 0 10px; width: fit-content;}
+#addTaskForm {
+    border: 3px solid purple; 
+    width: 100%;
+    padding: 20px;
+}
+#addTask {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+#addTask label {margin: 10px 0}
+#addTask label:first-child {margin-right: 15px;}
+#addTaskBtn {margin-top: 10px; width: 100%; padding: 5px 0;}
+
+.clearAllBtn-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+#clearAllBtn {
+    margin-top: 20px;
+    padding: 10px 20px;
+}
+
+/* List */
+.day-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#tasksList, .day, .task-cards, .task-card {width: 100%;}
+.day h3 {margin-bottom: 15px;}
+.day:not(:first-child) h3 {margin-top: 30px;}
+#tasksList {margin: 30px 0;}
+
+.task-card {
+    border: 1px solid black;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+}
+.task-card {margin-top: 10px;}
+.task-card__container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.task-dates {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.task-dates, .task-name, .task-description {
+    padding: 5px 15px;
+}
+.task-name {
+    text-align: center;
+    font-size: 18px;
+    text-decoration: overline;
+}
+
+.delBtn {
+    border:none;
+    border-left: 1px solid black;
+    width: 3em;
+}
