@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess Number Game</title>
+    <link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+    <main>
+        <section id="additInfo">
+            <section>
+                <p>Попытка</p>
+                <p id="numAttempt">0</p>
+            </section>
+            <section id="parity">
+                <p>Число:</p>
+                <p><strong>нечётное</strong></p>
+            </section>
+        </section>
+        <section id="mainArea">
+            <button id="startGame">Начать заново</button>
+            <section id="answer">Больше</section>
+            <label>
+                <input type="number" id="propNum">
+                <button>Проверить</button>
+            </label>
+        </section>
+        <section id="range">
+           <label for="lowValue">
+                от <input type="number" id="lowValue" value="0" max="9999998">
+           </label>
+           <label for="highValue">
+                до <input type="number" id="highValue" value="1000" max="9999999">
+            </label>
+        </section>
+    </main>
+</body>
+</html>

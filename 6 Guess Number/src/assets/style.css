@@ -1,0 +1,68 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    display: flex;
+    justify-content: center;
+}
+main {
+    display: grid;
+    grid-template-columns: 110px 250px 100px;
+    column-gap: 20px;
+    width: fit-content;
+    margin-top: 30px;
+}
+main>section {
+    display: flex;
+    flex-direction: column;
+}
+.hide {opacity: 0 !important;}
+
+
+#additInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+}
+#additInfo>section {
+    display: grid;
+    grid-template-rows: 1em auto;
+    row-gap: 5px;
+}
+#numAttempt {
+    font-size: 32px;
+    font-weight: bolder;
+}
+#parity strong {
+    font-size: 15px;
+    text-transform:uppercase;
+}
+#parity {
+    border: 1px solid black;
+    padding: 10px;
+}
+
+
+#answer {
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+}
+
+
+#mainArea label {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    column-gap: 5px;
+}
+#startGame {padding: 5px;}
+#range label:last-child {margin-top:10px;}
+#range label {
+    display: grid;
+    grid-template-columns: 1.5em calc(100% - 1.5em);
+}
