@@ -9,18 +9,6 @@
 </head>
 <body>
     <div class="wrapper">
-        <header>
-            <form id="sort">
-                <label for="sortType">
-                    Срок выполнения
-                    <select id="sortType">
-                        <option value="addition" selected>По добавлению</option>
-                        <option value="increase">По возрастанию</option>
-                        <option value="decrease">По убыванию</option>
-                    </select>
-                </label>
-            </form>
-        </header>
         <main>
             <section class="day-list">
                 <section id="addTaskForm">
@@ -39,6 +27,23 @@
                     <button id="addTaskBtn">Добавить</button>
                 </section>
                 <section class="clearAllBtn-container">
+                    <form id="sort">
+                        <label for="sortCreationDay">
+                            Дата создания
+                            <select id="sortCreationDay">
+                                <option value="decrease" selected>От новых к ранним</option>
+                                <option value="increase">От ранних к новым</option>
+                            </select>
+                        </label>
+                        <label for="sortDeadline">
+                            Срок выполнения
+                            <select id="sortDeadline">
+                                <option value="addition" selected>По добавлению</option>
+                                <option value="increase">По возрастанию</option>
+                                <option value="decrease">По убыванию</option>
+                            </select>
+                        </label>
+                    </form>
                     <button id="clearAllBtn">Очистить всё</button>
                 </section>
                 <section id="tasksList"></section>

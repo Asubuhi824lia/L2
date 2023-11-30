@@ -5,9 +5,9 @@ import {insertTask, createTaskList,
 
 const taskListDef = {
     tasks: [
-        {date:'20.11.2023', name: 'L2', description: '5 заданий из списка', deadline:'28.11.2023'},
-        {date:'28.11.2023', name: '3-е приложение', description: 'Игра "Угадай число"', deadline:'30.11.2023'},
-        {date:'28.11.2023', name: '4-е приложение', description: '"Планировщик задач"', deadline:'1.12.2023'},
+        {date:'20.11.2023', name: 'L2', description: '5 заданий из списка', deadline:'28.11.2023 23:59'},
+        {date:'28.11.2023', name: '3-е приложение', description: 'Игра "Угадай число"', deadline:'30.11.2023 17:30'},
+        {date:'28.11.2023', name: '4-е приложение', description: '"Планировщик задач"', deadline:'1.12.2023 23:59'},
     ]
 }
 
@@ -71,7 +71,7 @@ function formDatetime(datetime) {
 
 
 // Сортировка по сроку выполнения
-document.getElementById('sortType').addEventListener('change',(option)=>{
+document.getElementById('sortDeadline').addEventListener('change',(option)=>{
     const type = option.target.value
     // console.log(option.target.value)
 
@@ -94,6 +94,18 @@ document.getElementById('sortType').addEventListener('change',(option)=>{
             if(a.deadline < b.deadline) return 1
             else return -1
         })
+        createTaskList(curTaskList)
+    }
+})
+// Сортировка по сроку выполнения
+document.getElementById('sortCreationDay').addEventListener('change',(option)=>{
+    const type = option.target.value
+
+    if(type.toLowerCase() === "decrease") {
+        createTaskList(taskList)
+    } else if (type.toLowerCase() === "increase") {
+        const curTaskList = dubObject(taskList)
+        curTaskList.tasks.reverse()
         createTaskList(curTaskList)
     }
 })

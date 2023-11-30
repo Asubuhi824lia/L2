@@ -11,15 +11,11 @@ body {
 }
 section {width: fit-content;}
 
-header {
-    display: flex; 
-    justify-content: space-between; 
-    margin-bottom: 30px;
-}
 .wrapper {
     width: 650px;
+    margin: 30px auto;
 }
-main, header, .day-list {width: 100%;}
+main, .day-list {width: 100%;}
 main {
     display: flex;
     flex-direction: column;
@@ -35,15 +31,14 @@ button {
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-left: 30px;
 }
-[for="sortType"] {
+[for="sortDeadline"], [for="sortCreationDay"] {
     display: flex;
     flex-direction: column;
     width: fit-content;
-    margin-right: 15px;
+    margin-right: 30px;
 }
-#sortType {margin-top:5px;}
+#sortDeadline, #sortCreationDay {margin-top:5px;}
 
 
 /* Add New Form */
@@ -65,12 +60,10 @@ button {
 .clearAllBtn-container {
     width: 100%;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    margin-top: 30px;
 }
-#clearAllBtn {
-    margin-top: 20px;
-    padding: 10px 20px;
-}
+#clearAllBtn {padding: 10px 20px;}
 
 /* List */
 .day-list {
@@ -81,7 +74,7 @@ button {
 #tasksList, .day, .task-cards, .task-card {width: 100%;}
 .day h3 {margin-bottom: 15px;}
 .day:not(:first-child) h3 {margin-top: 30px;}
-#tasksList {margin: 30px 0;}
+#tasksList {margin-top: 30px;}
 
 .task-card {
     border: 1px solid black;
@@ -89,7 +82,7 @@ button {
     align-items: stretch;
     justify-content: space-between;
 }
-.task-card {margin-top: 10px;}
+.task-card:not(:first-child) {margin-top: 10px;}
 .task-card__container {
     width: 100%;
     display: flex;
