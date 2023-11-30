@@ -46,7 +46,7 @@ document.getElementById('clearAllBtn').addEventListener('click',()=>{
     }
 })
 
-// Добавить продукт
+// Добавить задачу
 document.getElementById('addTaskBtn').addEventListener('click',()=>{
     const name = document.getElementById('getTask').value.trim()
     document.getElementById('getTask').value =''

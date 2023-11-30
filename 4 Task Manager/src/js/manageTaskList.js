@@ -99,7 +99,7 @@ export function setDelBtnHandler(taskList) {
 function delBtnHandler(e, taskList) {
     if(confirm("Удалить эту запись?")) 
     {
-        // определяем порядок продукта в списке
+        // определяем порядок задачи в списке
         const tasksElems = Array.from(e.target.parentElement.parentElement.parentElement.children)
         const curCard = e.target.parentElement.parentElement
         tasksElems.reverse().forEach((card,id_task)=>{
@@ -120,17 +120,7 @@ function delBtnHandler(e, taskList) {
 }
 
 
-/* Изменение заметки */
-export function setEditBtnHandler(taskList) {
-    // выборочное удаление записей
-    Array.from(document.getElementsByClassName('editBtn')).forEach(delBtn=>{
-        delBtn.getElementsByTagName('svg')[0].style.pointerEvents = "none"
-
-        // delBtn.addEventListener('click', (e) => editBtnHandler(e, taskList))
-    })
-}
-
-
+/* Пометка задач как "выполненные" */
 export function setIsDoneBtnHandler(taskList) {
     Array.from(document.getElementsByClassName('doneBtn')).forEach((doneBtn)=>{
         doneBtn.addEventListener('click', (e) => isDoneBtnHandler(e, taskList))
@@ -138,7 +128,7 @@ export function setIsDoneBtnHandler(taskList) {
 }
 function isDoneBtnHandler(e, taskList) {
 
-    // определяем порядок продукта в списке
+    // определяем порядок задачи в списке
     const tasksElems = Array.from(e.target.parentElement.parentElement.children)
     const curCard = e.target.parentElement
     tasksElems.reverse().forEach((card,id_task)=>{
@@ -155,4 +145,80 @@ function isDoneBtnHandler(e, taskList) {
             localStorage.setItem('TaskManager_taskList', JSON.stringify(taskList))
         }
     })
+}
+
+
+/* Изменение заметки о задаче */
+export function setEditBtnHandler(taskList) {
+    // выборочное изменени записей
+    Array.from(document.getElementsByClassName('editBtn')).forEach(delBtn=>{
+        delBtn.getElementsByTagName('svg')[0].style.pointerEvents = "none"
+        delBtn.addEventListener('click', (e) => editBtnHandler(e, taskList))
+    })
+}
+function editBtnHandler(e, taskList) {
+    // узнать номер заметки в списке
+    const tasksElems = Array.from(e.target.parentElement.parentElement.parentElement.children)
+    const curCard = e.target.parentElement.parentElement
+    tasksElems.reverse().forEach((card,id_task)=>{
+        // в череде prompt-запросов получить название-описание-срок
+        if(curCard == card) 
+        {
+            const newName = prompt(`Редактирование названия задачи.\n\nПредыдущее: "${taskList.tasks[id_task].name}"`)
+            const newDesc = prompt(`Редактирование описания задачи.\n\nПредыдущее: "${taskList.tasks[id_task].description}"`)
+            let newDeadline = prompt(`Редактирование срока выполнения задачи.
+                \nПредыдущее: "${taskList.tasks[id_task].deadline}"
+                \nФормат: dd.mm.yyyy hh:mm`).trim()
+            while(newDeadline && !checkDatetime(newDeadline)) {
+                newDeadline = prompt(`Редактирование срока выполнения задачи.
+                    \nПредыдущее: "${taskList.tasks[id_task].deadline}"
+                    \nФормат: dd.mm.yyyy hh:mm`)
+            }
+            
+            // заменить данные
+            if(newName) {
+                curCard.querySelector('.card-name').textContent = newName.trim()
+                taskList.tasks[id_task].name = newName.trim()
+            }
+            if(newDesc) {
+                curCard.querySelector('.task-description').textContent = newDesc.trim()
+                taskList.tasks[id_task].description = newDesc.trim()
+            }
+            if(newDeadline) {
+                curCard.querySelector('.task-dates span:last-child strong').textContent = newDeadline.trim()
+                taskList.tasks[id_task].deadline = newDeadline.trim()
+            }
+            localStorage.setItem('TaskManager_taskList', JSON.stringify(taskList))
+        }
+    })
+}
+function checkDatetime(datetime) {
+    if(typeof datetime != 'string') return null;
+
+    const day = datetime.slice(0,2)
+    if(isNaN(Number(day)) || Number(day) > 31) return null;
+
+    if(datetime.slice(2,3)!='.') return null;
+    
+    const month = datetime.slice(3,5)
+    if(isNaN(Number(month)) || Number(month) > 12) return null;
+    
+    if(datetime.slice(5,6)!='.') return null;
+    
+    const year = datetime.slice(6,10)
+    // if(isNaN(Number(year))) return null;
+    
+    if(datetime.slice(10,11)!=' ') return null;
+
+    const hour = datetime.slice(11,13)
+    if(isNaN(Number(hour))|| Number(hour) >= 24) return null;
+
+    if(datetime.slice(13,14)!=':') return null;
+
+    const minutes = datetime.slice(14,16)
+    if(isNaN(Number(minutes)) || Number(minutes) >= 60) return null;
+
+    console.log(day, datetime.slice(2,3), month, datetime.slice(4,5), year, datetime.slice(6,10), 
+                datetime.slice(11,13), hour, datetime.slice(14,16), minutes)
+    return datetime
 }
