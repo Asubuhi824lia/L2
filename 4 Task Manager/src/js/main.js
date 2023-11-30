@@ -1,13 +1,13 @@
-import {insertTask, createTaskList,
-    getStrDate,
-    setDelBtnHandler} from './manageTaskList.js'
+import {insertTask, createTaskList, getStrDate,
+    setDelBtnHandler, setEditBtnHandler, setIsDoneBtnHandler
+} from './manageTaskList.js'
 
 
 const taskListDef = {
     tasks: [
-        {date:'20.11.2023', name: 'L2', description: '5 заданий из списка', deadline:'28.11.2023 23:59'},
-        {date:'28.11.2023', name: '3-е приложение', description: 'Игра "Угадай число"', deadline:'30.11.2023 17:30'},
-        {date:'28.11.2023', name: '4-е приложение', description: '"Планировщик задач"', deadline:'1.12.2023 23:59'},
+        {date:'20.11.2023', name: 'L2', description: '5 заданий из списка', deadline:'28.11.2023 23:59', isDone:false},
+        {date:'28.11.2023', name: '3-е приложение', description: 'Игра "Угадай число"', deadline:'30.11.2023 17:30', isDone:false},
+        {date:'28.11.2023', name: '4-е приложение', description: '"Планировщик задач"', deadline:'1.12.2023 23:59', isDone:false},
     ]
 }
 
@@ -24,8 +24,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(!taskList) { taskList = dubObject(taskListDef) }
     createTaskList(taskList)
 
-    // выборочное удаление записей
     setDelBtnHandler(taskList)
+    setEditBtnHandler(taskList)
+    setIsDoneBtnHandler(taskList)
 
     // Убрать с форм срабатывание по клику submit
     Array.from(document.getElementsByTagName('form')).forEach(form=>{
@@ -61,7 +62,8 @@ document.getElementById('addTaskBtn').addEventListener('click',()=>{
 
     localStorage.setItem('TaskManager_taskList', JSON.stringify(taskList))
     insertTask(task)
-    setDelBtnHandler()
+    setDelBtnHandler(taskList)
+    setEditBtnHandler(taskList)
 })
 function formDatetime(datetime) {
     let [date, time] = datetime.split('T')
@@ -102,11 +104,11 @@ document.getElementById('sortCreationDay').addEventListener('change',(option)=>{
     const type = option.target.value
 
     if(type.toLowerCase() === "decrease") {
-        createTaskList(taskList)
+        createTaskList(taskList)    // от новых к ранним
     } else if (type.toLowerCase() === "increase") {
         const curTaskList = dubObject(taskList)
         curTaskList.tasks.reverse()
-        createTaskList(curTaskList)
+        createTaskList(curTaskList) // от ранних к новым
     }
 })
 

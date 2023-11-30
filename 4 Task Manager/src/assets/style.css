@@ -24,6 +24,7 @@ button {
     cursor: pointer;
     padding: 0 10px;
 }
+.doneBtn {cursor: pointer;}
 
 
 /* Sort */
@@ -53,8 +54,7 @@ button {
     flex-direction: row;
     justify-content: space-between;
 }
-#addTask label {margin: 10px 0}
-#addTask label:first-child {margin-right: 15px;}
+#addTask label {margin: 10px 0; width: min-content;}
 #addTaskBtn {margin-top: 10px; width: 100%; padding: 5px 0;}
 
 .clearAllBtn-container {
@@ -75,6 +75,8 @@ button {
 .day h3 {margin-bottom: 15px;}
 .day:not(:first-child) h3 {margin-top: 30px;}
 #tasksList {margin-top: 30px;}
+.done {opacity: 0.2 !important;}
+
 
 .task-card {
     border: 1px solid black;
@@ -83,7 +85,9 @@ button {
     justify-content: space-between;
 }
 .task-card:not(:first-child) {margin-top: 10px;}
+.task-controls {display:flex;}
 .task-card__container {
+    border-left: 1px solid black;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -102,7 +106,8 @@ button {
     text-decoration: overline;
 }
 
-.delBtn {
+.doneBtn {margin: auto 10px;}
+.editBtn, .delBtn {
     border:none;
     border-left: 1px solid black;
     width: 3em;
