@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tic-tac-toe</title>
+    <link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+    <main>
+        <section id="infoPanel">
+            <section>
+                <p style="font-size: 25px;">Игрок</p>
+                <p id="player"><span class="cross">&#10006;</span></p>
+            </section>
+            <section>
+                <button id="startNewBtn">Новая игра</button>
+            </section>
+        </section>
+        <section id="gameArea">
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="cell"><span class="cross">&#10006;</span></td>
+                        <td class="cell"></td>
+                        <td class="cell"></td>
+                    </tr>
+                    <tr>
+                        <td class="cell"></td>
+                        <td class="cell"></td>
+                        <td class="cell"></td>
+                    </tr>
+                    <tr>
+                        <td class="cell"></td>
+                        <td class="cell"></td>
+                        <td class="cell">
+                            <svg height="36px" width="36px" class="zero">
+                                <circle cx="18" cy="18" r="13" stroke="green" stroke-width="4" fill="transparent" />
+                            </svg>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+
+    <template id="zeroTmp">
+        <svg height="36px" width="36px" class="zero">
+            <circle cx="18" cy="18" r="14" stroke="green" stroke-width="4" fill="transparent" />
+        </svg>
+    </template>
+    <template id="crossTmp">
+        <span class="cross">&#10006;</span>
+    </template>
+</body>
+</html>
