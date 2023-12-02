@@ -28,3 +28,13 @@ Array.from(document.getElementsByClassName("cell")).forEach((cell)=>{
         }
     })
 })
+
+
+document.getElementById('startNewBtn').addEventListener('click',()=>{
+    const isFinished = Array.from(document.getElementsByClassName('cell'))
+                            .map(e=>e.innerHTML)
+                            .filter(str=>str==='')
+                            .length === 0
+    if(!isFinished && !confirm("Стереть текущий прогресс?")) return;
+    Array.from(document.getElementsByClassName("cell")).forEach(cell => {cell.innerHTML = ''})
+})
