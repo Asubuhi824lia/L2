@@ -50,5 +50,58 @@
             </section>
         </main>
     </div>
+    <script type="text/javascript">
+        const setNotification = async (name, deadline) => {
+            // create and show the notification
+            const showNotification = () => {
+                // create a new notification
+                const notification = new Notification('Срок задачи приближается!', {
+                    body: `Задача: ${name}\nВыполнить до: ${deadline}`
+                });
+
+                // // close the notification after 10 seconds
+                // setTimeout(() => {
+                //     notification.close();
+                // }, 10 * 1000);
+
+                // navigate to a URL when clicked
+                notification.addEventListener('click', () => {
+
+                    window.open('http://127.0.0.1:5500/4%20Task%20Manager/src/index.html', '_blank');
+                });
+            }
+
+            // show an error message
+            const showError = () => {
+                const error = document.querySelector('.error');
+                error.style.display = 'block';
+                error.textContent = 'You blocked the notifications';
+            }
+
+            // check notification permission
+            let granted = false;
+
+            if (Notification.permission === 'granted') {
+                granted = true;
+            } else if (Notification.permission !== 'denied') {
+                let permission = await Notification.requestPermission();
+                granted = permission === 'granted' ? true : false;
+            }
+
+            // получить оставшееся время (в сек.) за 10 минут до дедлайна
+            let [day, time] = deadline.split(' ')
+            day = day.split('.')
+            day = `${day[1]}.${day[0]}.${day[2]}`
+            time = Number(Date.parse(new Date(day+' '+time))) - Date.parse(new Date()) - 1000*60*10
+            console.log(time)
+            time = (time < 0) ? 2000 : time
+            console.log(time)
+
+
+            // show notification or error
+            granted ? setTimeout(showNotification, time) : showError();
+
+        };
+    </script>
 </body>
 </html>

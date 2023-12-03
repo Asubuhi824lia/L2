@@ -1,4 +1,4 @@
-import {insertTask, createTaskList, getStrDate,
+import {insertTask, createTaskList, getStrDate, isDatetimeValid,
     setDelBtnHandler, setEditBtnHandler, setIsDoneBtnHandler
 } from './manageTaskList.js'
 
@@ -6,8 +6,9 @@ import {insertTask, createTaskList, getStrDate,
 const taskListDef = {
     tasks: [
         {date:'20.11.2023', name: 'L2', description: '5 заданий из списка', deadline:'28.11.2023 23:59', isDone:false},
-        {date:'28.11.2023', name: '3-е приложение', description: 'Игра "Угадай число"', deadline:'30.11.2023 17:30', isDone:false},
+        {date:'28.11.2023', name: '3-е приложение', description: 'Игра "Угадай число"', deadline:'30.11.2023 17:30', isDone:true},
         {date:'28.11.2023', name: '4-е приложение', description: '"Планировщик задач"', deadline:'1.12.2023 23:59', isDone:false},
+        {date:'30.11.2023', name: '5-е приложение', description: '"Музыкальный плеер с визуализацией"', deadline:'3.12.2023 23:59', isDone:false}
     ]
 }
 
@@ -48,6 +49,7 @@ document.getElementById('clearAllBtn').addEventListener('click',()=>{
 
 // Добавить задачу
 document.getElementById('addTaskBtn').addEventListener('click',()=>{
+
     const name = document.getElementById('getTask').value.trim()
     document.getElementById('getTask').value =''
     const description = document.getElementById('getDescription').value.trim()
@@ -55,15 +57,19 @@ document.getElementById('addTaskBtn').addEventListener('click',()=>{
     let deadline = document.getElementById('deadline').value
 
     if(name==='' || deadline==='') {alert("Не введены название или срок выполнения!"); return;}
-    console.log(name, deadline)
 
-    const task = {date: getStrDate(), name, description, deadline:formDatetime(deadline)}
-    taskList.tasks.push(task)
+    deadline = formDatetime(deadline)
+    if(!isDatetimeValid(deadline)) {alert("Введена некорректная дата или время!"); return;}
 
-    localStorage.setItem('TaskManager_taskList', JSON.stringify(taskList))
-    insertTask(task)
-    setDelBtnHandler(taskList)
-    setEditBtnHandler(taskList)
+    const task = {date: getStrDate(), name, description, deadline}
+        taskList.tasks.push(task)
+
+        localStorage.setItem('TaskManager_taskList', JSON.stringify(taskList))
+        insertTask(task)
+        setDelBtnHandler(taskList)
+        setEditBtnHandler(taskList)
+
+        setNotification(name, deadline)
 })
 function formDatetime(datetime) {
     let [date, time] = datetime.split('T')

@@ -168,7 +168,7 @@ function editBtnHandler(e, taskList) {
             const newDesc = prompt(`Редактирование описания задачи.\n\nПредыдущее: "${taskList.tasks[id_task].description}"`)
             let newDeadline = prompt(`Редактирование срока выполнения задачи.
                 \nПредыдущее: "${taskList.tasks[id_task].deadline}"
-                \nФормат: dd.mm.yyyy hh:mm`).trim()
+                \nФормат: dd.mm.yyyy hh:mm`)
             while(newDeadline && !checkDatetime(newDeadline)) {
                 newDeadline = prompt(`Редактирование срока выполнения задачи.
                     \nПредыдущее: "${taskList.tasks[id_task].deadline}"
@@ -176,23 +176,40 @@ function editBtnHandler(e, taskList) {
             }
             
             // заменить данные
-            if(newName) {
-                curCard.querySelector('.card-name').textContent = newName.trim()
+            if(newName && newName!='') {
+                curCard.querySelector('.task-name').textContent = newName.trim()
                 taskList.tasks[id_task].name = newName.trim()
             }
-            if(newDesc) {
+            if(newDesc && newDesc!='') {
                 curCard.querySelector('.task-description').textContent = newDesc.trim()
                 taskList.tasks[id_task].description = newDesc.trim()
             }
-            if(newDeadline) {
+            if(newDeadline && newDeadline!='' && isDatetimeValid(newDeadline)) {
                 curCard.querySelector('.task-dates span:last-child strong').textContent = newDeadline.trim()
                 taskList.tasks[id_task].deadline = newDeadline.trim()
             }
             localStorage.setItem('TaskManager_taskList', JSON.stringify(taskList))
+
+            if(isDatetimeValid(newDeadline)) {
+                const name = (newName || newName!=='') ? newName : card.querySelector('.task-name').textContent.trim()
+                const deadline = (newDeadline || newDeadline!=='') ? newDeadline : card.querySelector('.task-dates span:last-child strong').textContent
+                setNotification(name, deadline.split(' ').reverse().join(' '))
+            }
         }
     })
 }
-function checkDatetime(datetime) {
+
+export function isDatetimeValid(datetime) {
+    let [day, time] = datetime.split(' ')
+    day = day.split('.')
+    day = `${day[1]}.${day[0]}.${day[2]}`
+    datetime = day+' '+time
+
+    // время уже прошло?
+    return (new Date(datetime) > new Date())
+}
+/* datetime - формата dd.mm.yyyy hh:mm */
+function checkDatetime(datetime) { 
     if(typeof datetime != 'string') return null;
 
     const day = datetime.slice(0,2)
@@ -217,8 +234,6 @@ function checkDatetime(datetime) {
 
     const minutes = datetime.slice(14,16)
     if(isNaN(Number(minutes)) || Number(minutes) >= 60) return null;
-
-    console.log(day, datetime.slice(2,3), month, datetime.slice(4,5), year, datetime.slice(6,10), 
-                datetime.slice(11,13), hour, datetime.slice(14,16), minutes)
+    
     return datetime
 }
