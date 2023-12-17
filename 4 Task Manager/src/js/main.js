@@ -1,3 +1,4 @@
+import '../assets/style.css'
 import {insertTask, createTaskList, getStrDate, isDatetimeValid,
     setDelBtnHandler, setEditBtnHandler, setIsDoneBtnHandler
 } from './manageTaskList.js'
@@ -57,7 +58,7 @@ document.getElementById('addTaskBtn').addEventListener('click',()=>{
     let deadline = document.getElementById('deadline').value
 
     if(name==='' || deadline==='') {alert("Не введены название или срок выполнения!"); return;}
-
+    
     deadline = formDatetime(deadline)
     if(!isDatetimeValid(deadline)) {alert("Введена некорректная дата или время!"); return;}
 

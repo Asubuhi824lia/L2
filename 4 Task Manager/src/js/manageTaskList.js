@@ -189,12 +189,13 @@ function editBtnHandler(e, taskList) {
                 taskList.tasks[id_task].deadline = newDeadline.trim()
             }
             localStorage.setItem('TaskManager_taskList', JSON.stringify(taskList))
-
-            if(isDatetimeValid(newDeadline)) {
-                const name = (newName || newName!=='') ? newName : card.querySelector('.task-name').textContent.trim()
-                const deadline = (newDeadline || newDeadline!=='') ? newDeadline : card.querySelector('.task-dates span:last-child strong').textContent
-                setNotification(name, deadline.split(' ').reverse().join(' '))
-            }
+            
+            const name = (newName || newName!=='') ? newName : card.querySelector('.task-name').textContent.trim()
+            const deadline = (newDeadline == null || newDeadline==='') 
+                ? card.querySelector('.task-dates span:last-child strong').textContent
+                : ((isDatetimeValid(newDeadline)) ? card.querySelector('.task-dates span:last-child strong').textContent : newDeadline)
+            
+            setNotification(name, deadline.split(' ').reverse().join(' '))
         }
     })
 }
@@ -203,7 +204,7 @@ export function isDatetimeValid(datetime) {
     let [day, time] = datetime.split(' ')
     day = day.split('.')
     day = `${day[1]}.${day[0]}.${day[2]}`
-    datetime = day+' '+time
+    datetime = time+' '+day
 
     // время уже прошло?
     return (new Date(datetime) > new Date())
