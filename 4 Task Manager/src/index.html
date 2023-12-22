@@ -14,13 +14,13 @@
                     <h3>Добавить новую задачу</h3>
                     <form id="addTask">
                         <label>Название
-                            <input type="text" id="getTask" required>
+                            <input type="text" id="getTask" required autocomplete="off">
                         </label>
                         <label>Описание
-                            <input type="text" id="getDescription">
+                            <input type="text" id="getDescription" autocomplete="off">
                         </label>
                         <label>Срок выполнения
-                            <input type="datetime-local" id="deadline" required>
+                            <input type="datetime-local" id="deadline" required autocomplete="off">
                         </label>
                     </form>
                     <button id="addTaskBtn">Добавить</button>
@@ -30,8 +30,8 @@
                         <label for="sortCreationDay">
                             Дата создания
                             <select id="sortCreationDay">
-                                <option value="decrease" selected>От новых к ранним</option>
-                                <option value="increase">От ранних к новым</option>
+                                <option value="NewToEarly" selected>От новых к ранним</option>
+                                <option value="EarlyToNew">От ранних к новым</option>
                             </select>
                         </label>
                         <label for="sortDeadline">
@@ -49,7 +49,6 @@
             </section>
         </main>
     </div>
-    <script src="manageTaskList.bundle.js"defer></script>
     <script type="text/javascript">
         const setNotification = async (name, deadline) => {
             // create and show the notification
@@ -71,13 +70,6 @@
                 });
             }
 
-            // show an error message
-            const showError = () => {
-                const error = document.querySelector('.error');
-                error.style.display = 'block';
-                error.textContent = 'You blocked the notifications';
-            }
-
             // check notification permission
             let granted = false;
 
@@ -88,7 +80,7 @@
                 granted = permission === 'granted' ? true : false;
             }
 
-            // получить оставшееся время (в сек.) за 10 минут до дедлайна
+            // получить оставшееся время (в сек.) за 10 или 2 минуты до дедлайна
             let [day, time] = deadline.split(' ')
             day = day.split('.')
             day = `${day[1]}.${day[0]}.${day[2]}`
@@ -99,7 +91,7 @@
 
 
             // show notification or error
-            granted ? setTimeout(showNotification, time) : showError();
+            granted ? setTimeout(showNotification, time) : console.error('Timeout Error');
 
         };
     </script>

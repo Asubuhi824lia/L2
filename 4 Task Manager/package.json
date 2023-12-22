@@ -2,7 +2,7 @@
   "name": "4-task-manager",
   "version": "1.0.0",
   "description": "",
-  "main": "bundler.js",
+  "main": "newMain.js",
   "dependencies": {
     "acorn": "^8.11.2",
     "acorn-import-assertions": "^1.9.0",

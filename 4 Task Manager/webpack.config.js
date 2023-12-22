@@ -2,7 +2,7 @@ const path = require('path')
 const htmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-    mode: "development",
+    mode: "none",
     entry: path.resolve(__dirname,"src","js","main.js"),
     output: {
         filename: "[name].[chunkhash].js",
