@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Планировщик задач</title>
     <link rel="stylesheet" href="./assets/style.css">
+    <script type="module" src="./js/manageTaskList.js"></script>
     <script type="module" src="./js/main.js"defer></script>
 </head>
 <body>
@@ -91,7 +92,7 @@
             // получить оставшееся время (в сек.) за 10 минут до дедлайна
             let [day, time] = deadline.split(' ')
             day = day.split('.')
-            day = `${day[1]}.${day[0]}.${day[2]}`
+            day = `${day[1]}.${day[0]}.${day[2]}`  //dd.mm.yyyy => mm.dd.yyyy
             time = Number(Date.parse(new Date(day+' '+time))) - Date.parse(new Date()) - 1000*60*10
             console.log(time)
             time = (time < 0) ? 2000 : time
