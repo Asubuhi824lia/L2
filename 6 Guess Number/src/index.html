@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guess Number Game</title>
     <link rel="stylesheet" href="./assets/style.css">
-    <script src="./js/main.js" defer></script>
+    <script type="module" src="./js/main.js" defer></script>
 </head>
 <body>
     <div class="wrapper">
@@ -18,15 +18,15 @@
                 </section>
                 <section id="parity" class="hide">
                     <p>Число:</p>
-                    <p><strong>нечётное</strong></p>
+                    <p><strong id="strParity">нечётное</strong></p>
                 </section>
             </section>
             <section id="mainArea">
                 <button id="startGame">Начать игру</button>
                 <section id="answer" class="hide"></section>
                 <label class="hide">
-                    <input type="number" id="userNum">
-                    <button id="checkNumBtn">Проверить</button>
+                    <input type="number" id="userNum" disabled>
+                    <button id="checkNumBtn" disabled>Проверить</button>
                 </label>
             </section>
             <section id="range">
