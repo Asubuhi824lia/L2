@@ -2,8 +2,11 @@ import Game from './Game.js'
 
 
 // Спросить при обновлении
-if(!Game.isGridEmpty() && confirm("Продолжить последнюю игру?"))
-    Game.continueGame();
+if(!Game.isGridEmpty())
+    if(confirm("Продолжить последнюю игру?"))
+        Game.continueGame();
+    else 
+        Game.startNewGame(true); //не анализировать предыдущий прогресс
 else 
     Game.startNewGame();
 

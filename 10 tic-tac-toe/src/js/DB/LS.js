@@ -19,4 +19,15 @@ export default class LS {
     static _set(data, type) {
         localStorage.setItem(`TicTacToe_${type}`,data)
     }
+
+    static resetLS(defPlayer) {
+        this.setPlayer(defPlayer)
+        this.setIsEnd(false)
+        this.setEmptyGrid()
+    }
+    static setEmptyGrid() {
+        this.setGrid(
+            Array(3).fill(Array(3).fill(null))
+        );
+    }
 }

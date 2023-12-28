@@ -15,13 +15,15 @@ export default class Game {
         Game._setArea()
         this._showPlayer(LS.getPlayer())   
     }
-    static startNewGame() {
+    static startNewGame(isOldGameSaved = false) {
         const isend = LS.getIsEnd()
-        if(!isend && isend!=null && !Game.isGridEmpty() 
-                  && !confirm("Стереть текущий прогресс?")) return;
+
+        if(!isOldGameSaved && !Game.isGridEmpty() 
+            && !isend && isend!=null
+            && !confirm("Стереть текущий прогресс?")) Game._setArea();
 
         GridArea.toggleArea(false)
-        Game._resetLS()
+        LS.resetLS(this.players.CROSS)
         Game._setArea() //только после очистки LS
         Game._showPlayer(Game.players.CROSS)
     }
@@ -37,19 +39,13 @@ export default class Game {
         // Проверить результат && обновить данные LS
         if(curPlayer.handleResult()) {
             LS.setIsEnd(true);
-            LS.setGrid(Game._getEmptyGrid())
+            LS.setEmptyGrid();
             return;
         }
         
         // сменить игрока
         LS.setPlayer(!player)
         Game._showPlayer(!player)
-    }
-
-    static _resetLS() {
-        LS.setPlayer(this.players.CROSS)
-        LS.setIsEnd(false)
-        LS.setGrid(this._getEmptyGrid())
     }
 
     static _getEmptyGrid(){return Array(3).fill(Array(3).fill(null));}
