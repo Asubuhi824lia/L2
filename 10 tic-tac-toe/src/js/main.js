@@ -1,31 +1,15 @@
-import cellClickHandler from './cellClickHandler.js'
+import Game from './Game.js'
 
 
-globalThis.player = true // false=='zero', true=='cross'
-globalThis.step = 1
-globalThis.isWin = false
-
-
-const template = document.getElementById(player ? "crossTmp" : "zeroTmp").content.cloneNode(true)
-document.getElementById('player').innerHTML = ''
-document.getElementById('player').appendChild(template)
+// Спросить при обновлении
+if(!Game.isGridEmpty() && confirm("Продолжить последнюю игру?"))
+    Game.continueGame();
+else 
+    Game.startNewGame();
 
 
 Array.from(document.getElementsByClassName("cell")).forEach((cell)=>{
-    cell.addEventListener('click', cellClickHandler)
+    cell.addEventListener('click', Game.makeStep)
 })
 
-
-document.getElementById('startNewBtn').addEventListener('click',()=>{
-    if(!isWin && !confirm("Стереть текущий прогресс?")) return;
-
-    // стереть
-    Array.from(document.getElementsByClassName("cell")).forEach(cell => {cell.innerHTML = ''})
-    document.getElementById('player').innerHTML=''
-    setCross(document.getElementById('player'))
-    player = true
-    step = 1
-    isWin = false
-    document.getElementById('playerStatus').textContent='Игрок'
-    toggleArea(false)
-})
+document.getElementById('startNewBtn').addEventListener('click', Game.startNewGame)
