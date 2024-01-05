@@ -50,13 +50,19 @@ export class SetAuto extends Input {
 export class ArrSize extends Input {
     
     static disable(isDisabled) {
-        Input.disable('#setAuto', isDisabled)
+        Input.disable('#arrSize', isDisabled)
     }
 
     static createOptions() {
         const MIN_ARRAY_SIZE = 3
         const MAX_ARRAY_SIZE = 20
-        const DEFAULT_SIZE = 14
+        let isExtraLarge = document.getElementById("showArea").clientWidth < 600
+        let isLarge = document.getElementById("showArea").clientWidth > 450
+        let isSmall = document.getElementById("showArea").clientWidth < 350
+        let isExtraSmall = document.getElementById("showArea").clientWidth < 200
+        const DEFAULT_SIZE = isLarge ? 
+                            (isExtraLarge ? 18:14) : 
+                            (isSmall ? (isExtraSmall ? 4:7) : 10);
 
         const fragment = document.createDocumentFragment() //для пакетной обработки изменений перед добавлением в DOM
         for (let len = MIN_ARRAY_SIZE; len <= MAX_ARRAY_SIZE; len++) {
