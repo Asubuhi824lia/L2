@@ -93,18 +93,18 @@ export class ResetBtn extends EdgeControl {
 // Общее для runtime-кнопок "Пауза" и "Продолжить"
 class OnRunControl {
     static mode = {
-        RUN: [true, 'continueBtn'],
-        PAUSE: [false, 'pauseBtn'],
+        RUN: {code:true, id:'continueBtn'},
+        PAUSE: {code:false, id:'pauseBtn'},
     }
 
     static switch(elem, mode) {
         OnRunControl._switchMode(mode);
-        OnRunControl._switchBtns(elem, mode ? this.mode.RUN[1] : this.mode.PAUSE[1]);
+        OnRunControl._switchBtns(elem, mode ? this.mode.PAUSE.id : this.mode.RUN.id);
     }
 
     static _switchMode(mode) {
-        isRun   = this.mode.RUN[0]  ===mode
-        isPause = this.mode.PAUSE[0]===mode
+        isRun   = this.mode.RUN.code  ===mode
+        isPause = this.mode.PAUSE.code===mode
     }
     static _switchBtns(elem, mode) {
         elem.disabled = true
@@ -114,13 +114,13 @@ class OnRunControl {
 
 export class PauseBtn extends OnRunControl {
     static switch(e) {
-        OnRunControl.switch(e.target, true)
+        OnRunControl.switch(e.target, false)
     }
 }
 
 export class ContinueBtn extends OnRunControl {
     static switch(e) {
-        OnRunControl.switch(e.target, false)
+        OnRunControl.switch(e.target, true)
         Animate.continue()
     }
 }

@@ -8,7 +8,7 @@ export default class Paint {
         DEFINE: 'definable',
     }
 
-    static async swap(cur, next, timeout) {
+    static async swap(cur, next, timeout, isAwait = true) {
         // сформировать
         const promise = createTimeoutPromise(
             () => document.getElementById('showArea').insertBefore(
@@ -19,7 +19,7 @@ export default class Paint {
         )
 
         // выполнить
-        await Animate.checkIsPause(promise)() 
+        await Animate.checkIsPause(promise, isAwait)() 
     }
 
     static async paintNumb(index, timeout) {
@@ -42,16 +42,9 @@ export default class Paint {
             return;
         }
 
-        // сформировать
-        const promises = indexes.map(index => 
-            () => Paint._paintColumn(index, this.types.SELECT, true)
-        ).map(callback => 
-            createTimeoutPromise(callback, timeout)
-        )
-
         // выполнить
-        await Animate.checkIsPause(promises[0])()
-        await Animate.checkIsPause(promises[1])()
+        await Paint.paintNumb(indexes[0], timeout)
+        await Paint.paintNumb(indexes[1], timeout)
     }
     // static paintAll() {}
 
@@ -69,7 +62,7 @@ export default class Paint {
             await Animate.checkIsPause(promise, isAwait)() 
         )
     }
-    static unpaintNumbs(indexes, timeout) {
+    static async unpaintNumbs(indexes, timeout) {
         if(!Array.isArray(indexes) || typeof(timeout) != 'number') 
         {
             console.error("Input values aren`t valid!",
@@ -79,17 +72,8 @@ export default class Paint {
             return;
         }
 
-        // сформировать
-        const promises = indexes.map(index => 
-            () => Paint._paintColumn(index, this.types.SELECT, false)
-        ).map(callback => 
-            createTimeoutPromise(callback, timeout)
-        )
-
-        // выполнить
-        promises.forEach(async (promise) => 
-            await Animate.checkIsPause(promise)()
-        )
+        await Paint.unpaintNumb(indexes[0], timeout, false)
+        await Paint.unpaintNumb(indexes[1], timeout, false)
     }
 
     static async paintFixedNumb(index, timeout, isAwait = true) {

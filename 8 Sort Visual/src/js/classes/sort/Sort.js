@@ -15,10 +15,10 @@ export default class Sort {
                     [values[j], values[j + 1]] = [values[j + 1], values[j]]
                 }
                 // снять выделение
-                Paint.unpaintNumbs([j, j+1], timeout)
+                await Paint.unpaintNumbs([j, j+1], timeout)
                      
                 // "зафиксировать" найденное наибольшее
-                if(j+1 === values.length - i - 1) 
+                if(j+1 === values.length - i - 1)
                     await Paint.paintFixedNumb(j+1, timeout)
             }
         }
@@ -39,7 +39,7 @@ export default class Sort {
                     await Paint.swap(i-1, i, timeout);
                     [values[i - 1], values[i]] = [values[i], values[i - 1]]
                 }
-                Paint.unpaintNumbs([i-1, i], timeout)
+                await Paint.unpaintNumbs([i-1, i], timeout)
                 if(i === left + 1) await Paint.paintFixedNumb(i-1, timeout)
             }
             ++left;
@@ -52,7 +52,7 @@ export default class Sort {
                     await Paint.swap(i, i+1, timeout);
                     [values[i], values[i + 1]] = [values[i + 1], values[i]]
                 }
-                Paint.unpaintNumbs([i, i+1], timeout)
+                await Paint.unpaintNumbs([i, i+1], timeout)
                 if(i === right - 1) await Paint.paintFixedNumb(i+1, timeout)
             }
             --right;
@@ -71,12 +71,12 @@ export default class Sort {
     
                 if (values[i] > values[i + step]) {
                     // переставить
-                    await Paint.swap(i + step, i, timeout)
+                    Paint.swap(i + step, i, timeout, false)
                     await Paint.swap(i, i + step, timeout)
                     
                     ;[values[i], values[i + step]] = [values[i + step], values[i]]
                 }
-                Paint.unpaintNumbs([i, i + step], timeout)
+                await Paint.unpaintNumbs([i, i + step], timeout)
             }
             step = Math.floor(step / factor);
         }
@@ -93,7 +93,7 @@ export default class Sort {
                 await Paint.paintNumb(j - 1, timeout)
                 // Не подходит? Снять выделение
                 if(j - 1 !== 0 && !(values[j - 2] < x && values[j - 1] >= x))
-                    await Paint.unpaintNumb(j - 1, timeout, false)
+                    Paint.unpaintNumb(j - 1, timeout, false)
 
                 values[j] = values[j - 1]
                 j--
@@ -104,7 +104,7 @@ export default class Sort {
                 await Paint.swap(j, i, timeout)
             }
             // снять выделение
-            Paint.unpaintNumbs([j, j+1], timeout, false)
+            await Paint.unpaintNumbs([j, j+1], timeout)
         }
     }
     
@@ -117,25 +117,27 @@ export default class Sort {
             for(let pos = i+1; pos < values.length; ++pos) {
                 await Paint.paintNumb(pos, timeout)
                 
+                // Найдено меньшее значение? 
                 if(values[min] > values[pos]) {
-                    if(min != i) await Paint.unpaintNumb(min, timeout, false)
+                    // снять выделение с прошлого минимума
+                    if(min != i) //не затирать 1-й минимум
+                        Paint.unpaintNumb(min, timeout, false)
+
                     min = pos
-                    await Paint.paintNumb(min, timeout)
-                } else if(pos == values.length-1 && pos != min) {
-                    await Paint.unpaintNumb(pos, timeout)
+                    // оставляем выделенным
                 } else {
-                    await Paint.unpaintNumb(pos, timeout, false)
+                    // снять выделение с числа
+                    Paint.unpaintNumb(pos, timeout, false)
                 }
             }
             
             // поменять местами
-            await Paint.unpaintNumb(i, timeout, false)
             await Paint.paintFixedNumb(min, timeout, false)
             if(min > i) {
-                await Paint.swap(min, i, timeout)
+                Paint.swap(min, i, timeout, false)
                 await Paint.swap(i, min, timeout)
             }
-            Paint.unpaintNumbs([i, min], timeout);
+            await Paint.unpaintNumbs([i, min], timeout);
             [values[i], values[min]] = [values[min], values[i]]
         }
     }
