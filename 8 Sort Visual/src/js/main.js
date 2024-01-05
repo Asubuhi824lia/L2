@@ -5,7 +5,7 @@ import {selectNumbs, selectNumb, leaveNumbs, leaveNumb,
 globalThis.isPause = false
 globalThis.pausedAnimations = []
 
-const timeout = 500
+const timeout = 1500
 let isRun = false //для radio
 
 
@@ -56,15 +56,18 @@ document.getElementById('startBtn').addEventListener('click',(e)=>{
 })
 document.getElementById('pauseBtn').addEventListener('click',(e)=>{
     globalThis.isPause = true
-    e.target.disabled = true
     isRun = false
+
+    e.target.disabled = true
     document.getElementById('continueBtn').disabled = false
 })
 document.getElementById('continueBtn').addEventListener('click',(e)=>{
     globalThis.isPause = false
-    e.target.disabled = true
     isRun = true
+
+    e.target.disabled = true
     document.getElementById('pauseBtn').disabled = false
+    
     continueAnimate()
 })
 document.getElementById('resetBtn').addEventListener('click',(e)=>{

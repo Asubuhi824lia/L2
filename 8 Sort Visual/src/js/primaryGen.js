@@ -46,6 +46,7 @@ function changeArrNumbs(length) {
         inputNum.classList.add('value')
         inputNum.min = 1
         inputNum.max = getMaxValue()
+        
         // исключить возм-ть записи числа больше 3-значного и MAX (250px - 2em)
         inputNum.addEventListener("keydown",(e)=>{
             const value = e.target.value
@@ -56,11 +57,8 @@ function changeArrNumbs(length) {
             ,50)
         })
         // отобразить значение на диаграмме showArea
-        inputNum.addEventListener("keyup",(e)=>{ //ввод
+        inputNum.addEventListener("input",(e)=>{ //ввод
             setTimeout(()=>changeValue(i, e.target.value),200)
-        })
-        inputNum.addEventListener("change",(e)=>{//стрелки
-            setTimeout(()=>changeValue(i, e.target.value || e.value),200)
         })
         fragment.appendChild(inputNum)
     }

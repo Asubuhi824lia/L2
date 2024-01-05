@@ -39,7 +39,7 @@ export function leaveNumb(index, timeout) {
     })
 }
 
-export function animateSwap(cur, next, timeout, ) {
+export function animateSwap(cur, next, timeout) {
     return () => new Promise(resolve => {
         setTimeout(()=>{
             resolve(
