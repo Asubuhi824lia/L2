@@ -23,7 +23,6 @@ export default class Sort {
             }
         }
         await Paint.paintFixedNumb(0, timeout)
-        return values;
     }
 
     static async ShakerSort(values) {
@@ -59,7 +58,6 @@ export default class Sort {
         }
     
         await Paint.paintFixedNumb(Math.floor(values.length/2), timeout, false) //окрасить оставшийся элемент
-        return values
     }
     
     static async CombSort(values) {
@@ -80,6 +78,8 @@ export default class Sort {
             }
             step = Math.floor(step / factor);
         }
+        // окрасить окрасить зафиксированные "цифры"(столбцы)
+        await Paint.paintAll(values.length, timeout)
     }
     
     static async InsertSort(values) {
@@ -106,6 +106,8 @@ export default class Sort {
             // снять выделение
             await Paint.unpaintNumbs([j, j+1], timeout)
         }
+        // окрасить окрасить зафиксированные "цифры"(столбцы)
+        await Paint.paintAll(values.length, timeout)
     }
     
     static async SelectSort(values) {

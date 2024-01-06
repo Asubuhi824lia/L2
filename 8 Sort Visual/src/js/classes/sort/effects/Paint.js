@@ -46,7 +46,11 @@ export default class Paint {
         await Paint.paintNumb(indexes[0], timeout)
         await Paint.paintNumb(indexes[1], timeout)
     }
-    // static paintAll() {}
+    static async paintAll(length, timeout) {
+        for (let index = 0; index < length; index++) {
+            await Paint.paintFixedNumb(index, timeout)
+        }
+    }
 
     static async unpaintNumb(index, timeout, isAwait = true) {
         // сформировать
