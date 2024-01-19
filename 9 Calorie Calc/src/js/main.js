@@ -98,6 +98,8 @@ document.getElementById('addProdBtn').addEventListener('click',()=>{
 })
 
 
+/* Фильтрация */
+
 // Сортировка по калорийности
 document.getElementById('sortType').addEventListener('change',(option)=>{
     const type = option.target.value
@@ -154,5 +156,4 @@ function filterDays(days, name) {
         })
         .filter(day => day.products.length > 0)
 }
-
 function dubObject(object) {return JSON.parse(JSON.stringify(object))}

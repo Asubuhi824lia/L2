@@ -9,9 +9,11 @@ export function insertProd(product) {
 
     // установить соответствие даты
     if(lastDate === getStrDate()) {
+        // вставить заметку в список заметок дня
         document.querySelectorAll('.day:first-child .product-card')[0]
             .before(createProdNode(product))
     } else {
+        // вставить заметку вместе со списком заметок дня
         document.querySelectorAll('.day')[0]
             .before(createDayNode({date:getStrDate(), products:[product]}))
     }
@@ -71,7 +73,6 @@ export function createProdList(productsList) {
 
 
 /* Удаление заметки */
-
 export function setDelBtnHandler(productsList) {
     // выборочное удаление записей
     Array.from(document.getElementsByClassName('delBtn')).forEach(delBtn=>{
@@ -83,19 +84,19 @@ export function setDelBtnHandler(productsList) {
 function delBtnHandler(e, productsList) {
     if(confirm("Удалить эту запись?")) 
     {
-        // определяем порядок продукта в списке
+    // определяем порядок продукта в списке
         const products = Array.from(e.target.parentElement.parentElement.children)
         const curCard = e.target.parentElement
         products.reverse().forEach((card,id_product)=>{
             if(curCard == card) 
             {
-                // определяем порядок дня в списке
+            // определяем порядок дня в списке
                 const days = Array.from(e.target.parentElement.parentElement.parentElement.parentElement.children)
                 const curDay = curCard.parentElement.parentElement
                 days.reverse().forEach((day, id_day)=>{
                     if(day == curDay) 
                     {
-                        // убираем заметку из localStorage
+                    // убираем заметку из localStorage
                         let prods = productsList.days[id_day].products
                         productsList.days[id_day].products = sliceArray(prods, id_product)
 
@@ -107,7 +108,7 @@ function delBtnHandler(e, productsList) {
                             // удаляем заметку с зоны видимости
                             curCard.remove()
                         }
-                        localStorage.setItem('CalorieCalc_prodList', JSON.stringify(productsList))
+                        // localStorage.setItem('CalorieCalc_prodList', JSON.stringify(productsList))
                         drawDiagram()
                         return;
                     }
@@ -131,7 +132,6 @@ function sliceArray(array, id_del) {
 
 
 /* Рисование диаграммы потреблённых калорий */
-
 export function drawDiagram() {
     document.getElementById('graphic')
 

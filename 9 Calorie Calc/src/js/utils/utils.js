@@ -1,3 +1,7 @@
+/**
+ * Вернуть строку вормата "dd.mm.yyyy"
+ * @param {Date} date
+ */
 export function getStrCurDate(date = new Date) {
     return (
         date
@@ -5,7 +9,10 @@ export function getStrCurDate(date = new Date) {
         day:'numeric', month:'numeric', year:'numeric'
     })
 }
-
+/**
+ * Возвращает сумму массива каллорий.
+ * @param {Array} products
+ */
 export function sumCalories(products) {
     return products.map(product=>{
             // перевести в калории

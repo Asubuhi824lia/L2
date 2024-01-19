@@ -1,77 +1,206 @@
-import { getStrCurDate } from "../utils/utils"
-import Diagram from "../Diagram/Diagram.js"
+import { getStrCurDate } from "../utils/utils.js"
+import Diagram from "../Diagram.js"
 import LS from "../LS/LS.js"
 
 
 export default class List {
-    // сформировать список заметок за все дни
-    static createProdList() {
+    static prodListDef = {
+        days: [
+            {
+                date:'26.11.2023',
+                products: [
+                    {name: 'Банан', calories: '107', measure:'кКал.'},
+                    {name: 'Леденцовая конфета', calories: '50', measure:'кал.'}
+                ]
+            }
+        ]
+    }
+    /**
+     * Сформировать список DOM-элементов заметок за все дни.
+     * @param {Array} prodList 
+     */
+    static createProdList(prodList = LS.getProducts() || List.prodListDef) {
         document.getElementById('productsList').innerHTML=''
-
-        const prodList = LS.getProducts()
+        
         prodList.days.forEach((day, index) => {
             // внести в список 1-й день
             if (index == 0) 
                 document.getElementById('productsList')
-                        .appendChild(DayNode.create(day))
+                        .appendChild(Day.create(day))
             // внести в начало списка следующий день
             else 
                 document.querySelector('#productsList .day')
-                        .before(DayNode.create(day))
+                        .before(Day.create(day))
         });
     }
-    // вставить заметку о новом продукте в список
+    /**
+     * Вставить DOM-элеиент заметки о новом продукте в список последнего 
+     * зафиксированного дня либо вместе со вставкой нового дня.
+     * @param {{name: String, calories: String, measure: String}} product 
+     */
     static insertProd(product) {
-        const note = new NoteNode(product)
+        const note = new Note(product)
 
-        // добавить новый день с новой заметкой?
-        if(note.isNewDay) DayNode.create(...[note.node])
-        // вставить новую заметку
-        else List._getLastNote().before(note.node)
+        // добавить как новый день
+        if(note.isNewDay) Day.create(...[note.node])
+        // вставить как новую заметку
+        else List._getLastNoteNode().before(note.node)
     }
-    _getLastNote() {
+    static _getLastNoteNode() {
         return document.querySelectorAll('.day:first-child .product-card')[0]
+    }
+    /**
+     * Удалить все записи из хранилища и с интерфейса.
+     */
+    static clear() {
+        if(confirm("Вы уверены, что хотите удалить ВСЕ записи?")) {
+            prodList = {
+                days: []
+            }
+            LS.setProducts(prodList)
+            Diagram.draw()
+        }
+    }
+    /**
+     * Отфильтровать по введённому названию продукта и переформировать выдачу.
+     */
+    static filter() {
+        const name = document.getElementById('getProdName').value
+        const days = LS.getProducts().days
+        const filteredProdList= {}
+        
+        filteredProdList.days = List.filterDays(days, name)
+        List.createProdList(filteredProdList)
+    }
+    static _filterDays(days, name) {
+        return (
+            days
+        ).map(day => {
+            day.products = Day.filterProdsName(day.products, name)
+            return day
+        })
+        // Не включать "пустые" дни
+        .filter(day => day.products.length > 0)
+    }
+    /**
+     * Выбрать и выполнить сортировку по каллориям.
+     */
+    static sort(option) {
+        const type = option.target.value
+        switch (type) {
+            case "increase":
+                Sort.sortByCalorieIncrease(); break;
+            case "decrease":
+                Sort.sortByCalorieDecrease(); break;
+            default:
+                Sort.sortByCalorieAddition(); break;
+        }
     }
 }
 
-class DayNode {
+/**
+ * Сортировки выдачи на основе каллорий по возрастанию, убыванию числа либо по добавлению заметки.
+ */
+class Sort {
+    static sortByCalorieAddition() {
+        List.createProdList()
+    }
+    static sortByCalorieIncrease() {
+        const curProrList   = LS.getProducts()
+        const sortedProdList= {
+            days: curProrList.days.map(day=>{
+                day.products = day.products.sort((a,b)=>{
+                    const calorA = (a.measure.toLowerCase() === 'ккал.') ? 1000*Number(a.calories) : Number(a.calories)
+                    const calorB = (b.measure.toLowerCase() === 'ккал.') ? 1000*Number(b.calories) : Number(b.calories)
+                    if(calorA < calorB) return -1
+                    else return 1
+                })
+                return day
+            })
+        }
+        List.createProdList(sortedProdList)
+    }
+    static sortByCalorieDecrease() {
+        const curProrList   = LS.getProducts()
+        const sortedProdList  = {
+            days: curProrList.days.map(day=>{
+                day.products = day.products.sort((a,b)=>{
+                    const calorA = (a.measure.toLowerCase() === 'ккал.') ? 1000*Number(a.calories) : Number(a.calories)
+                    const calorB = (b.measure.toLowerCase() === 'ккал.') ? 1000*Number(b.calories) : Number(b.calories)
+                    if(calorA < calorB) return 1
+                    else return -1
+                })
+                return day
+            })
+        }
+        List.createProdList(sortedProdList)
+    }
+}
+
+class Day {
     constructor(dayProducts) {
         this.dayProducts  = dayProducts
     }
-    _createDayListNode() {
+    /**
+     * Возвращает DOM-элемент, заполненный списком из DOM-элементов заметок, 
+     * относящихся к текущему дню.
+     */
+    createDayListNode() {
         const day_list = document.createElement('section')
         day_list.classList.add('product-cards')
         day_list.append(...this._createProdNodes(this.dayProducts))
         return day_list
     }
     _createProdNodes(products) {
-        return products.map(product=>new NoteNode(product).node).reverse()
+        return products.map(product=>new Note(product).node).reverse()
     }
-
+    /**
+     * Возвращает DOM-элемент дня со списком заметок и датой.
+     * @param {{date: String, products: Array}} DayList
+     * @returns 
+     */
     static create({date, products}) {
         const day = document.createElement('section')
         day.classList.add('day')
         
         const h = document.createElement('h3')
         h.textContent = date
-        const cards_list = new DayNode(products)._createDayListNode()
+        const cards_list = new Day(products).createDayListNode()
 
         day.append(h, cards_list)
         return day
     }
+    /**
+     * Возвращает список отфильтрованных по имени продуктов дня.
+     * @param {Array} products 
+     * @param {String} name 
+     * @returns 
+     */
+    static filterProdsName(products, name) { 
+        return products.filter(product => 
+            product.name.toLowerCase().includes(name.toLowerCase())
+        ) 
+    }
 }
 
-class NoteNode {
+class Note {
     constructor(product) {
         this.product  = product
         this.isNewDay = !this.isLastDay()
         this.node = this.create()
     }
-    // Опрделить дату
+    /**
+     * Возвращает true - если последний день в списке и текущий день соответствуют, иначе - false.
+     */
     isLastDay()      {return this._getStrLastDay() === getStrCurDate()}
-    _getStrLastDay() {return this._getLastDay().textContent}
+    _getStrLastDay() {
+        const lastDay = this._getLastDay()
+        return lastDay ? lastDay.textContent : null;
+    }
     _getLastDay()    {return document.querySelectorAll('.day h3')[0]}
-    // Сформировать DOM-элемент
+    /**
+     * Возвращает сформированный DOM-элемент на основе данных объекта заметки.
+     */
     create() {
         const info     = this._createInfoNode()
         const controls = this._createControlsNode()
@@ -130,10 +259,17 @@ class DelNote {
         return days.reverse().filter((day)=>(day == this.curDay))[0]
     }
 
-    // не ловить события от элементов внутри кнопки
+    /**
+     * Убрать отслеживание событий мыши от элементов внутри кнопки.
+     * @param {HTMLButtonElement} delBtn 
+     */
     static delContentListen(delBtn) {
         delBtn.getElementsByTagName('svg')[0].style.pointerEvents = "none"
     }
+    /**
+     * Удаляет заметку и из списка, и из LS. Включает перерасчёт гистограммы.
+     * @param {Event} e 
+     */
     static handler(e) {
         const delNote = new DelNote(e)
         delNote._delFromLS()
