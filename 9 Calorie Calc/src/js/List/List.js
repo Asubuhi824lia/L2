@@ -19,9 +19,10 @@ export default class List {
      * Сформировать список DOM-элементов заметок за все дни.
      * @param {Array} prodList 
      */
-    static createProdList(prodList = LS.getProducts() || List.prodListDef) {
+    static createProdList(prodList = LS.getProducts() || List.prodListDef, isRewrite = true) {
         document.getElementById('productsList').innerHTML=''
-        
+
+        if(isRewrite) LS.setProducts(prodList)
         prodList.days.forEach((day, index) => {
             // внести в список 1-й день
             if (index == 0) 
@@ -42,12 +43,18 @@ export default class List {
         const note = new Note(product)
 
         // добавить как новый день
-        if(note.isNewDay) Day.create(...[note.node])
+        if(note.isNewDay) document.getElementById("productsList").insertBefore(
+            Day.create({date:getStrCurDate(), products:[note.product]}),
+            List._getLastDay()
+        )
         // вставить как новую заметку
         else List._getLastNoteNode().before(note.node)
     }
     static _getLastNoteNode() {
         return document.querySelectorAll('.day:first-child .product-card')[0]
+    }
+    static _getLastDay() {
+        return document.querySelectorAll('.day')[0]
     }
     /**
      * Удалить все записи из хранилища и с интерфейса.
@@ -103,26 +110,12 @@ export default class List {
  */
 class Sort {
     static sortByCalorieAddition() {
-        List.createProdList()
+        const curProrList = LS.getProducts()
+        List.createProdList(curProrList, false)
     }
     static sortByCalorieIncrease() {
         const curProrList   = LS.getProducts()
         const sortedProdList= {
-            days: curProrList.days.map(day=>{
-                day.products = day.products.sort((a,b)=>{
-                    const calorA = (a.measure.toLowerCase() === 'ккал.') ? 1000*Number(a.calories) : Number(a.calories)
-                    const calorB = (b.measure.toLowerCase() === 'ккал.') ? 1000*Number(b.calories) : Number(b.calories)
-                    if(calorA < calorB) return -1
-                    else return 1
-                })
-                return day
-            })
-        }
-        List.createProdList(sortedProdList)
-    }
-    static sortByCalorieDecrease() {
-        const curProrList   = LS.getProducts()
-        const sortedProdList  = {
             days: curProrList.days.map(day=>{
                 day.products = day.products.sort((a,b)=>{
                     const calorA = (a.measure.toLowerCase() === 'ккал.') ? 1000*Number(a.calories) : Number(a.calories)
@@ -133,7 +126,22 @@ class Sort {
                 return day
             })
         }
-        List.createProdList(sortedProdList)
+        List.createProdList(sortedProdList, false)
+    }
+    static sortByCalorieDecrease() {
+        const curProrList   = LS.getProducts()
+        const sortedProdList  = {
+            days: curProrList.days.map(day=>{
+                day.products = day.products.sort((a,b)=>{
+                    const calorA = (a.measure.toLowerCase() === 'ккал.') ? 1000*Number(a.calories) : Number(a.calories)
+                    const calorB = (b.measure.toLowerCase() === 'ккал.') ? 1000*Number(b.calories) : Number(b.calories)
+                    if(calorA < calorB) return -1
+                    else return 1
+                })
+                return day
+            })
+        }
+        List.createProdList(sortedProdList, false)
     }
 }
 
@@ -188,32 +196,31 @@ class Note {
         this.product  = product
         this.isNewDay = !this.isLastDay()
         this.node = this.create()
+        DelNote.delContentListen(this.node)  
     }
     /**
      * Возвращает true - если последний день в списке и текущий день соответствуют, иначе - false.
      */
     isLastDay()      {return this._getStrLastDay() === getStrCurDate()}
     _getStrLastDay() {
-        const lastDay = this._getLastDay()
+        const lastDay = this._getLastDayDate()
         return lastDay ? lastDay.textContent : null;
     }
-    _getLastDay()    {return document.querySelectorAll('.day h3')[0]}
+    _getLastDayDate()    {return document.querySelectorAll('.day h3')[0]}
+    
     /**
      * Возвращает сформированный DOM-элемент на основе данных объекта заметки.
      */
     create() {
         const info     = this._createInfoNode()
         const controls = this._createControlsNode()
-
+        
         const card = document.createElement('section')
         card.classList.add('product-card')
         card.append(info, controls)
-
+        
         // Слушатель на кнопку
-        card.querySelector('delBtn').addEventListener('click', (e) => {
-            DelNote.delContentListen(e.target)
-            DelNote.handler(e)
-        })
+        card.querySelector('.delBtn').addEventListener('click', DelNote.handler)
         return card
     }
     _createInfoNode() {
@@ -243,20 +250,24 @@ class Note {
 
 class DelNote {
     constructor(e) {
-        // получить DOM-элемент блока заметки
-        this.curCard    = e.target.parentElement
-        this.id_product = this._getProductId()
-        // получить DOM-элемент блока списка заметок дня
+        this.curCard    = e.target.parentElement.parentElement
         this.curDay = this.curCard.parentElement.parentElement
         this.id_day = this._getProdDayId()
+        this.id_product = this._getProductId()
     }
     _getProductId() {
-        const products = Array.from(document.querySelectorAll('#productsList .product-card'))
-        return products.reverse().filter((card)=>(this.curCard == card))[0]
+        const products = Array.from(this.curDay.querySelectorAll('.product-card'))
+        return products.reverse().map((card, id)=>{
+            if(this.curCard == card) return id;
+            else return null;
+        }).filter(id => (id!=null))[0]
     }
     _getProdDayId() {
         const days = Array.from(document.querySelectorAll('#productsList .day'))
-        return days.reverse().filter((day)=>(day == this.curDay))[0]
+        return days.reverse().map((day, id)=>{
+            if(this.curDay == day) return id;
+            else return null;
+        }).filter(id => (id!=null))[0]
     }
 
     /**
@@ -293,7 +304,7 @@ class DelNote {
                 break;
         }
         // удалить из хранилища
-        LS.setProd(prodList)
+        LS.setProducts(prodList)
     }
     _sliceArray(array, id_del) {
         switch (id_del) {

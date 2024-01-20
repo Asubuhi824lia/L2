@@ -47,10 +47,11 @@ export default class Diagram {
      * Возвращает наибольшую сумму каллорий среди 7 последних дней.
      */
     _getWeekMax() {
-        let week = LS.getProducts().days.slice(-7)
-        return Math.max(...week.map(day=>
+        const prodList = LS.getProducts()
+        let week = prodList ? prodList.days.slice(-7) : []
+        return (week.length > 0) ? Math.max(...week.map(day=>
             sumCalories(day.products)
-        ))
+        )) : 0
     }
     /**
      * Возвращает DOM-элемент, отображающий соответствующую дату в формате 'dd.mm.yyyy'.
@@ -65,9 +66,15 @@ export default class Diagram {
      * Возвращает массив с данными о последних 7 днях записей.
      */
     _getLastWeek() {
-        let week = LS.getProducts().days.slice(-7)
-        if(week.length < 7) {
-            for(let i=0; i < 7 - list.days.length; i++) {
+        const prodList = LS.getProducts()
+        let week = prodList ? prodList.days.slice(-7) : []
+        if(week.length == 0) {
+            for(let i=0; i<7; i++) {
+                let date = i==0 ? getStrCurDate() : this._getPrevDate(week[0].date);
+                week.unshift({date, products:null})
+            }
+        } else if(week.length < 7) {
+            for(let i=0; week.length != 7; i++) {
                 let date = this._getPrevDate(week[0].date)
                 week.unshift({date, products:null})
             }

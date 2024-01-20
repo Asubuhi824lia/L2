@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 // Изменить целевые показатели калорийности на день
 document.querySelector('#editDayGoal')
-        .addEventListener('click', DayGoal.set)
+        .addEventListener('click', DayGoal.askDayGoal)
 
 // Очистить все записи
 document.getElementById('clearAllBtn')
