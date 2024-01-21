@@ -7,10 +7,33 @@ export default class List {
     static prodListDef = {
         days: [
             {
-                date:'26.11.2023',
+                date:'16.01.2024',
                 products: [
                     {name: 'Банан', calories: '107', measure:'кКал.'},
                     {name: 'Леденцовая конфета', calories: '50', measure:'кал.'}
+                ]
+            },
+            {
+                date:'19.01.2024',
+                products: [
+                    {name: 'Яблоко', calories: '82', measure:'кКал.'},
+                    {name: 'Долька Лимона', calories: '1', measure:'кал.'},
+                    {name: 'Долька Лимона', calories: '1', measure:'кал.'}
+                ]
+            },
+            {
+                date:'20.01.2024',
+                products: [
+                    {name: 'Банан', calories: '107', measure:'кКал.'},
+                    {name: 'Яблоко', calories: '30', measure:'кКал.'},
+                    {name: 'Апельсин', calories: '36', measure:'кКал.'},
+                    {name: 'Жаренная Картошечка', calories: '370', measure:'кКал.'}
+                ]
+            },
+            {
+                date:'21.01.2024',
+                products: [
+                    {name: 'Жаренная Картошечка', calories: '370', measure:'кКал.'},
                 ]
             }
         ]
@@ -76,8 +99,8 @@ export default class List {
         const days = LS.getProducts().days
         const filteredProdList= {}
         
-        filteredProdList.days = List.filterDays(days, name)
-        List.createProdList(filteredProdList)
+        filteredProdList.days = name.trim()=="" ? days : List._filterDays(days, name)
+        List.createProdList(filteredProdList, false)
     }
     static _filterDays(days, name) {
         return (
